@@ -27,7 +27,23 @@ $user_avatar = 'img/user.jpg';
         <a class="main-header__add-lot button" href="add-lot.html">Добавить лот</a>
 
         <nav class="user-menu">
-
+        <?php if($is_auth):?>
+          <div class="user-menu__image">
+            <img src="img/user.jpg" width="40" height="40" alt="Пользователь">
+          </div>
+          <div class="user-menu__logged">
+            <p><?=$user_name?></p>
+          </div>
+        <?else:?>
+        <ul class="user-menu__list">
+          <li class="user-menu__item">
+            <a href="#">Регистрация</a>
+          </li>
+          <li class="user-menu__item">
+            <a href="#">Вход</a>
+          </li>
+        </ul>
+        <?endif;?>
         <!-- здесь должен быть PHP код для показа аватара пользователя -->
 
         </nav>
