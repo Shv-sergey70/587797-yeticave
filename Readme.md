@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Сергей Шершнев](https://up.htmlacademy.ru/php/6/user/587797).
-* Наставник: `Неизвестно`.
+* Наставник: [Илья Кондрашов](https://htmlacademy.ru/profile/id644427).
 
 ---
 
