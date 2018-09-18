@@ -1,4 +1,12 @@
 <?php
+//Создадим функция module2-task2
+function toPriceFormat($num) {
+    $number = ceil($num);
+    if ($number >= 1000) {
+        $number = number_format($number, 0, '.', ' ');
+    }
+    return $number.' &#8381;';
+}
 //Создадим 2 массива module2-task1
 $navArr = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
 $advArr = [
@@ -124,7 +132,7 @@ $user_avatar = 'img/user.jpg';
                         <div class="lot__state">
                             <div class="lot__rate">
                                 <span class="lot__amount">Стартовая цена</span>
-                                <span class="lot__cost"><?=$value['PRICE']?><b class="rub">р</b></span>
+                                <span class="lot__cost"><?=toPriceFormat($value['PRICE'])?></span>
                             </div>
                             <div class="lot__timer timer">
 
