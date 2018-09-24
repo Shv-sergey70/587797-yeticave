@@ -1,13 +1,5 @@
 <?php
 require_once('functions.php');
-//Создадим функция module2-task2
-function toPriceFormat($num) {
-    $number = ceil($num);
-    if ($number >= 1000) {
-        $number = number_format($number, 0, '.', ' ');
-    }
-    return $number.' &#8381;';
-}
 //Создадим 2 массива module2-task1
 $menu_items = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
 $catalog_items = [
@@ -57,7 +49,18 @@ $user_name = 'Сергей'; // укажите здесь ваше имя
 $user_avatar = 'img/user.jpg';
 ?>
 <?php
-    $page_content = include_template('index.php', Array('menu_items' => $menu_items, 'catalog_items' => $catalog_items));
-    $layout_content = include_template('layout.php', Array('content' => $page_content, 'title' => 'Yeticave'));
+    $page_content = include_template('index.php', 
+      Array(
+        'menu_items' => $menu_items, 
+        'catalog_items' => $catalog_items
+      ));
+    $layout_content = include_template('layout.php', 
+      Array(
+        'content' => $page_content, 
+        'menu_items' => $menu_items, 
+        'title' => 'Yeticave', 
+        'is_auth'=>$is_auth, 
+        'user_name'=>$user_name
+      ));
     print($layout_content);
 ?>
