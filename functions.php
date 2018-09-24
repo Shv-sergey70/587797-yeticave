@@ -24,3 +24,19 @@ function toPriceFormat($num) {
     }
     return $number.' &#8381;';
 }
+//module3-task2
+date_default_timezone_set('UTC');
+function getTimeToMidnight() {
+	$second_to_midnight = strtotime('tomorrow') - time();
+	var_dump(date('H:i:s', $second_to_midnight));
+}
+getTimeToMidnight();
+// $second_to_midnight = strtotime('tomorrow') - time();
+// echo "<pre>";
+	// var_dump(strtotime('tomorrow'));
+	// var_dump(time());
+  // var_dump(strtotime('tomorrow') - time());
+  // var_dump(date('l jS \of F Y H:i:s A', time()));
+  // var_dump(date('l jS \of F Y H:i:s A', strtotime('tomorrow')));
+  // var_dump(date('H:i:s', strtotime('tomorrow') - time()));
+// echo "</pre>";
