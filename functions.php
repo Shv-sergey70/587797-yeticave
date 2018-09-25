@@ -29,6 +29,14 @@ function getTimeToMidnight() {
 	$second_to_midnight = strtotime('tomorrow') - time();
 	$hours_to_midnight = 23-date('G');
 	$minutes_to_midnight = 59-date('i');
+	$hours_to_midnight = add0ToDate($hours_to_midnight);
+	$minutes_to_midnight = add0ToDate($minutes_to_midnight);
 	return $hours_to_midnight.':'.$minutes_to_midnight;
 }
-var_dump(getTimeToMidnight());
+//Функция добавляет 0, если минут или часов меньше 10
+function add0ToDate($value) {
+	if ($value < 10) {
+		$value = '0'.$value;
+	}
+	return $value;
+}
