@@ -1,14 +1,16 @@
 USE YETICAVE;
 
-INSERT INTO categories SET name = 'Доски и лыжи';
-INSERT INTO categories SET name = 'Крепления';
-INSERT INTO categories SET name = 'Ботинки';
-INSERT INTO categories SET name = 'Одежда';
-INSERT INTO categories SET name = 'Инструменты';
-INSERT INTO categories SET name = 'Разное';
+INSERT INTO categories SET id = 1, name = 'Доски и лыжи';
+INSERT INTO categories SET id = 2, name = 'Крепления';
+INSERT INTO categories SET id = 3, name = 'Ботинки';
+INSERT INTO categories SET id = 4, name = 'Одежда';
+INSERT INTO categories SET id = 5, name = 'Инструменты';
+INSERT INTO categories SET id = 6, name = 'Разное';
 
-INSERT INTO users (date_register, email, name, password, contacts) VALUES ('2018-09-18 00:00:00', 'evgeniy@gmail.com', 'Evgeniy', '12345', 'vk - id12324'),
-('2018-09-21 00:00:00', 'alexey@gmail.com', 'Alexey', '123456', 'vk - id12322'), ('2018-09-24 00:00:00', 'petrovich@gmail.com', 'Petr', '1234567', 'vk - id12321');
+INSERT INTO users (id, date_register, email, name, password, contacts) VALUES 
+(1, '2018-09-18 00:00:00', 'evgeniy@gmail.com', 'Evgeniy', '12345', 'vk - id12324'),
+(2, '2018-09-21 00:00:00', 'alexey@gmail.com', 'Alexey', '123456', 'vk - id12322'), 
+(3, '2018-09-24 00:00:00', 'petrovich@gmail.com', 'Petr', '1234567', 'vk - id12321');
 
 INSERT INTO lots (name, adv_category_id, start_price, image_url, date_create, bet_step, author_id) VALUES 
 ('2014 Rossignol District Snowboard', 1, 10999, 'img/lot-1.jpg', '2018-09-23 00:00:00', 100, 2),
@@ -25,11 +27,27 @@ INSERT INTO bets SET date_create = '2018-09-24 00:00:00', price = 10000, user_id
 
 -- 1. получить все категории
 -- SELECT * FROM categories
+
 -- 2. получить самые новые, открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение, цену, количество ставок, название категории
--- SELECT lots.name, lots.start_price, lots.image_url, lots.bet_step, COUNT(bets.lot_id), categories.name FROM lots JOIN bets ON lots.id = bets.lot_id JOIN categories ON lots.adv_category_id = categories.id GROUP BY bets.lot_id
+-- SELECT 
+-- lots.name AS lot_name, 
+-- lots.start_price AS lot_start_price, 
+-- lots.image_url, 
+-- lots.bet_step, 
+-- COUNT(bets.lot_id) AS bets_number, 
+-- categories.name AS category_name 
+-- FROM lots 
+-- JOIN bets 
+-- ON lots.id = bets.lot_id 
+-- JOIN categories 
+-- ON lots.adv_category_id = categories.id 
+-- GROUP BY bets.lot_id
+
 -- 3. Показать лот по его id. Получите также название категории, к которой принадлежит лот
 -- SELECT * FROM lots JOIN categories ON lots.adv_category_id = categories.id WHERE lots.id = 2;
+
 -- 4. Обновить название лота по его идентификатору;
 -- UPDATE lots SET name = 'Измененный лот' WHERE id = 1;
+
 -- 5. Получить список самых свежих ставок для лота по его идентификатору;
 -- SELECT * FROM bets JOIN lots ON bets.lot_id = lots.id WHERE lots.id = 1 ORDER BY bets.date_create DESC;
