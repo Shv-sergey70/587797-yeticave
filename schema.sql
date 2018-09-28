@@ -2,7 +2,7 @@ CREATE DATABASE yeticave DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general
 
 USE YETICAVE;
 
-CREATE TABLE categoried (
+CREATE TABLE categories (
 id INT AUTO_INCREMENT PRIMARY KEY,
 name CHAR(64)
 );
@@ -36,12 +36,10 @@ avatar_url TEXT,
 contacts TEXT
 );
 CREATE UNIQUE INDEX email ON users(email);
-CREATE INDEX password ON users(password);
 
 CREATE INDEX date_end ON lots(date_end);
 CREATE INDEX date_create ON lots(date_create);
 CREATE INDEX author_id ON lots(author_id);
-CREATE INDEX winner_id ON lots(winner_id);
 CREATE INDEX adv_category_id ON lots(adv_category_id);
 
 CREATE INDEX user_id ON bets(user_id);
