@@ -22,15 +22,11 @@ if ($link === false) {
                             lots.date_create,
                             lots.date_end, 
                             lots.bet_step, 
-                            -- COUNT(bets.lot_id) AS bets_number, 
                             categories.name AS category_name 
                             FROM lots 
-                            -- JOIN bets 
-                            -- ON lots.id = bets.lot_id 
                             JOIN categories 
                             ON lots.adv_category_id = categories.id 
                             WHERE lots.date_end > CURDATE()
-                            -- GROUP BY bets.lot_id
                             ORDER BY lots.date_create DESC';
     $catalog_items_DB = mysqli_query($link, $catalog_items_query);
     if ($catalog_items_DB) {
