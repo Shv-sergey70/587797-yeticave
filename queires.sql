@@ -32,7 +32,8 @@ INSERT INTO bets SET date_create = '2018-09-24 00:00:00', price = 10000, user_id
 -- SELECT 
 -- lots.name AS lot_name, 
 -- lots.start_price AS lot_start_price, 
--- lots.image_url, 
+-- lots.image_url,
+-- lots.date_create, 
 -- lots.bet_step, 
 -- COUNT(bets.lot_id) AS bets_number, 
 -- categories.name AS category_name 
@@ -41,7 +42,9 @@ INSERT INTO bets SET date_create = '2018-09-24 00:00:00', price = 10000, user_id
 -- ON lots.id = bets.lot_id 
 -- JOIN categories 
 -- ON lots.adv_category_id = categories.id 
+-- WHERE lots.date_create > CURDATE()
 -- GROUP BY bets.lot_id
+-- ORDER BY lots.date_create DESC
 
 -- 3. Показать лот по его id. Получите также название категории, к которой принадлежит лот
 -- SELECT * FROM lots JOIN categories ON lots.adv_category_id = categories.id WHERE lots.id = 2;
