@@ -4,6 +4,7 @@ $link = mysqli_connect('localhost', 'root', 'root', 'yeticave');
 
 if ($link === false) {
     print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
+    die();
 } else {
     mysqli_set_charset($link, 'utf8');
     $menu_items_query = 'SELECT * FROM categories';
@@ -13,6 +14,7 @@ if ($link === false) {
     } else {
       $error = mysqli_error($link);
       print("Ошибка: Невозможно выполнить запрос к БД " . $error);
+      die();
     }
 
     $catalog_items_query = 'SELECT
@@ -34,6 +36,7 @@ if ($link === false) {
     } else {
       $error = mysqli_error($link);
       print("Ошибка: Невозможно выполнить запрос к БД " . $error);
+      die();
     }
 }
 $is_auth = rand(0, 1);
