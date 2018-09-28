@@ -1,45 +1,45 @@
 <?php
 require_once('functions.php');
-//Создадим 2 массива module2-task1
-$menu_items = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
-$catalog_items = [
-    [
-        'NAME' => '2014 Rossignol District Snowboard',
-        'CATEGORY' => 'Доски и лыжи',
-        'PRICE' => '10999',
-        'URL' => 'img/lot-1.jpg'
-    ],
-    [
-        'NAME' => 'DC Ply Mens 2016/2017 Snowboard',
-        'CATEGORY' => 'Доски и лыжи',
-        'PRICE' => '159999',
-        'URL' => 'img/lot-2.jpg'
-    ],
-    [
-        'NAME' => 'Крепления Union Contact Pro 2015 года размер L/XL',
-        'CATEGORY' => 'Крепления',
-        'PRICE' => '8000',
-        'URL' => 'img/lot-3.jpg'
-    ],
-    [
-        'NAME' => 'Ботинки для сноуборда DC Mutiny Charocal',
-        'CATEGORY' => 'Ботинки',
-        'PRICE' => '10999',
-        'URL' => 'img/lot-4.jpg'
-    ],
-    [
-        'NAME' => 'Куртка для сноуборда DC Mutiny Charocal',
-        'CATEGORY' => 'Одежда',
-        'PRICE' => '7500',
-        'URL' => 'img/lot-5.jpg'
-    ],
-    [
-        'NAME' => 'Маска Oakley Canopy',
-        'CATEGORY' => 'Разное',
-        'PRICE' => '5400',
-        'URL' => 'img/lot-6.jpg'
-    ],
-];
+$link = mysqli_connect('localhost', 'root', 'root', 'yeticave');
+
+if ($link === false) {
+    print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
+} else {
+    mysqli_set_charset($link, 'utf8');
+    $menu_items_query = 'SELECT * FROM categories';
+    $menu_items_DB = mysqli_query($link, $menu_items_query);
+    if ($menu_items_DB) {
+      $menu_items = mysqli_fetch_all($menu_items_DB, MYSQLI_ASSOC);
+    } else {
+      $error = mysqli_error($link);
+      print("Ошибка: Невозможно выполнить запрос к БД " . $error);
+    }
+
+    $catalog_items_query = 'SELECT
+                            lots.name AS lot_name, 
+                            lots.start_price AS lot_start_price, 
+                            lots.image_url,
+                            lots.date_create,
+                            lots.date_end, 
+                            lots.bet_step, 
+                            -- COUNT(bets.lot_id) AS bets_number, 
+                            categories.name AS category_name 
+                            FROM lots 
+                            -- JOIN bets 
+                            -- ON lots.id = bets.lot_id 
+                            JOIN categories 
+                            ON lots.adv_category_id = categories.id 
+                            WHERE lots.date_end > CURDATE()
+                            -- GROUP BY bets.lot_id
+                            ORDER BY lots.date_create DESC';
+    $catalog_items_DB = mysqli_query($link, $catalog_items_query);
+    if ($catalog_items_DB) {
+      $catalog_items = mysqli_fetch_all($catalog_items_DB, MYSQLI_ASSOC);
+    } else {
+      $error = mysqli_error($link);
+      print("Ошибка: Невозможно выполнить запрос к БД " . $error);
+    }
+}
 $is_auth = rand(0, 1);
 
 $user_name = 'Сергей'; // укажите здесь ваше имя
