@@ -5,11 +5,8 @@ $link = require_once('db_conn.php');
 
 $menu_items_query = 'SELECT * FROM categories';
 $menu_items_DB = mysqli_query($link, $menu_items_query);
-if (!$menu_items_DB) {
-  $error = mysqli_error($link);
-  print("Ошибка: Невозможно выполнить запрос к БД " . $error);
-  die(); 
-}
+checkDBError($menu_items_DB, $link);
+
 $menu_items = mysqli_fetch_all($menu_items_DB, MYSQLI_ASSOC);
 
 $catalog_items_query = 'SELECT
@@ -27,11 +24,7 @@ $catalog_items_query = 'SELECT
                         WHERE lots.date_end > CURDATE()
                         ORDER BY lots.date_create DESC';
 $catalog_items_DB = mysqli_query($link, $catalog_items_query);
-if (!$catalog_items_DB) {
-  $error = mysqli_error($link);
-  print("Ошибка: Невозможно выполнить запрос к БД " . $error);
-  die();
-}
+checkDBError($catalog_items_DB, $link);
 
 $catalog_items = mysqli_fetch_all($catalog_items_DB, MYSQLI_ASSOC);
 

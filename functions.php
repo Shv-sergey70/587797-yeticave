@@ -47,3 +47,20 @@ function getTimeDiff($future_time) {
     $hours_to = add0ToDate(floor($seconds_diff/3600));
     return $hours_to.':'.$minutes_to.':'.$seconds_to;
 }
+// Функция проверяет на существование результат запроса - если нет - отправляет 404
+function checkForExistanceDBres($checking_item)
+{
+  if (empty($checking_item)) {
+    header("HTTP/1.x 404 Not Found");
+    die();
+  }
+}
+// Функция проверяет на существование результат запроса - если нет - отправляет 404
+function checkDBError($checking_item, $link)
+{
+  if (!$checking_item) {
+      $error = mysqli_error($link);
+      print("Ошибка: Невозможно выполнить запрос к БД " . $error);
+      die();
+    }
+}
