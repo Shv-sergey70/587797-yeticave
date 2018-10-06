@@ -1,14 +1,8 @@
 <?php
 require_once('functions.php');
 require_once('const.php');
+$link = require_once('db_conn.php');
 
-$link = mysqli_connect('localhost', 'root', 'root', 'yeticave');
-
-if ($link === false) {
-    print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
-    die();
-}
-mysqli_set_charset($link, 'utf8');
 $menu_items_query = 'SELECT * FROM categories';
 $menu_items_DB = mysqli_query($link, $menu_items_query);
 if (!$menu_items_DB) {

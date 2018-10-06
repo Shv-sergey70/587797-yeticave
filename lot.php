@@ -1,20 +1,12 @@
 <?php
 require_once('functions.php');
-
+$link = require_once('db_conn.php');
 
 if (!isset($_GET['ID'])) {
 	header("HTTP/1.x 404 Not Found");
   die();
 }
 $lot_id = intval($_GET['ID']);
-
-
-$link = mysqli_connect('localhost', 'root', 'root', 'yeticave');
-if ($link === false) {
-    print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
-    die();
-}
-mysqli_set_charset($link, 'utf8');
 
 $menu_items_query = 'SELECT * FROM categories';
 $menu_items_DB = mysqli_query($link, $menu_items_query);
@@ -30,11 +22,16 @@ $lot_query = 'SELECT
 							lots.name as NAME,
 							lots.description as DESCRIPTION,
 							lots.image_url as IMAGE_URL,
-							categories.name as CATEGORY_NAME
+              lots.date_end as FINISH_DATE,
+							categories.name as CATEGORY_NAME,
+              bets.price as CURRENT_PRICE
 							FROM lots 
 							JOIN categories
 							ON lots.adv_category_id = categories.id
-							WHERE lots.id = '.$lot_id;
+              JOIN bets
+              ON bets.lot_id = lots.id
+							WHERE
+              lots.date_end > CURDATE() AND lots.id = '.$lot_id;
 $lot_item_DB = mysqli_query($link, $lot_query);
 if (!$lot_item_DB) {
   $error = mysqli_error($link);

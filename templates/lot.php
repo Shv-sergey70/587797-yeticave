@@ -8,24 +8,24 @@
   </ul>
 </nav>
 <section class="lot-item container">
-  <h2><?=$lot_item['NAME']?></h2>
+  <h2><?=htmlspecialchars($lot_item['NAME'], ENT_QUOTES)?></h2>
   <div class="lot-item__content">
     <div class="lot-item__left">
       <div class="lot-item__image">
-        <img src=<?=$lot_item['IMAGE_URL']?> width="730" height="548" alt="Сноуборд">
+        <img src=<?=htmlspecialchars($lot_item['IMAGE_URL'], ENT_QUOTES)?> width="730" height="548" alt="Сноуборд">
       </div>
       <p class="lot-item__category">Категория: <span><?=$lot_item['CATEGORY_NAME']?></span></p>
-      <p class="lot-item__description"><?=$lot_item['DESCRIPTION']?></p>
+      <p class="lot-item__description"><?=htmlspecialchars($lot_item['DESCRIPTION'], ENT_QUOTES)?></p>
     </div>
     <div class="lot-item__right">
       <div class="lot-item__state">
         <div class="lot-item__timer timer">
-          10:54:12
+          <?=getTimeDiff($lot_item['FINISH_DATE'])?>
         </div>
         <div class="lot-item__cost-state">
           <div class="lot-item__rate">
             <span class="lot-item__amount">Текущая цена</span>
-            <span class="lot-item__cost">10 999</span>
+            <span class="lot-item__cost"><?=toPriceFormat($lot_item['CURRENT_PRICE'])?></span>
           </div>
           <div class="lot-item__min-cost">
             Мин. ставка <span>12 000 р</span>

@@ -39,3 +39,11 @@ function add0ToDate($value) {
 	}
 	return $value;
 }
+//Функция для определения разницы времени между определенным моментов и настоящим
+function getTimeDiff($future_time) {
+    $seconds_diff = strtotime($future_time) - time();
+    $seconds_to = add0ToDate(floor(($seconds_diff)%60));
+    $minutes_to = add0ToDate(floor(($seconds_diff/60)%60));
+    $hours_to = add0ToDate(floor($seconds_diff/3600));
+    return $hours_to.':'.$minutes_to.':'.$seconds_to;
+}
