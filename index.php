@@ -2,13 +2,13 @@
 require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
+$user = require_once('user.php');
 
+//Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
-$menu_items_DB = mysqli_query($link, $menu_items_query);
-checkDBError($menu_items_DB, $link);
+$menu_items = get_DB_query_rows($menu_items_query, $link);
 
-$menu_items = mysqli_fetch_all($menu_items_DB, MYSQLI_ASSOC);
-
+//Запрос на получение лотов
 $catalog_items_query = 'SELECT
                         lots.id as ID,
                         lots.name AS lot_name, 
@@ -23,15 +23,9 @@ $catalog_items_query = 'SELECT
                         ON lots.adv_category_id = categories.id 
                         WHERE lots.date_end > CURDATE()
                         ORDER BY lots.date_create DESC';
-$catalog_items_DB = mysqli_query($link, $catalog_items_query);
-checkDBError($catalog_items_DB, $link);
+$catalog_items = get_DB_query_rows($catalog_items_query, $link);
 
-$catalog_items = mysqli_fetch_all($catalog_items_DB, MYSQLI_ASSOC);
 
-$is_auth = rand(0, 1);
-
-$user_name = 'Сергей'; // укажите здесь ваше имя
-$user_avatar = 'img/user.jpg';
 $page_content = include_template('index.php', 
   [
     'menu_items' => $menu_items, 
@@ -42,7 +36,6 @@ $layout_content = include_template('layout.php',
     'content' => $page_content, 
     'menu_items' => $menu_items, 
     'title' => 'Yeticave', 
-    'is_auth'=>$is_auth, 
-    'user_name'=>$user_name
+    'user'=>$user
   ]);
 print($layout_content);

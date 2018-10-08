@@ -56,11 +56,23 @@ function checkForExistanceDBres($checking_item)
   }
 }
 // Функция проверяет на существование результат запроса - если нет - отправляет 404
-function checkDBError($checking_item, $link)
-{
-  if (!$checking_item) {
+function get_DB_query_rows($query, $link) {
+    $query_result = mysqli_query($link, $query);
+     if (!$query_result) {
       $error = mysqli_error($link);
-      print("Ошибка: Невозможно выполнить запрос к БД " . $error);
+      print("Ошибка в запросе $query: $error");
       die();
     }
+    $fetched_query_result = mysqli_fetch_all($query_result, MYSQLI_ASSOC);
+    return $fetched_query_result;
+}
+function get_DB_query_row($query, $link) {
+    $query_result = mysqli_query($link, $query);
+     if (!$query_result) {
+      $error = mysqli_error($link);
+      print("Ошибка в запросе $query: $error");
+      die();
+    }
+    $fetched_query_result = mysqli_fetch_assoc($query_result);
+    return $fetched_query_result;
 }
