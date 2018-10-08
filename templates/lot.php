@@ -1,8 +1,3 @@
-<?
-echo "<pre>";
-  var_dump($lot_item);
-echo "</pre>";
-?>
 <nav class="nav">
   <ul class="nav__list container">
     <?foreach($menu_items as $value):?>
@@ -17,7 +12,7 @@ echo "</pre>";
   <div class="lot-item__content">
     <div class="lot-item__left">
       <div class="lot-item__image">
-        <img src=<?=htmlspecialchars($lot_item['IMAGE_URL'], ENT_QUOTES)?> width="730" height="548" alt='<?=htmlspecialchars($lot_item['NAME'], ENT_QUOTES)?>'>
+        <img src='<?=htmlspecialchars($lot_item['IMAGE_URL'], ENT_QUOTES)?>' width="730" height="548" alt='<?=htmlspecialchars($lot_item['NAME'], ENT_QUOTES)?>'>
       </div>
       <p class="lot-item__category">Категория: <span><?=$lot_item['CATEGORY_NAME']?></span></p>
       <p class="lot-item__description"><?=htmlspecialchars($lot_item['DESCRIPTION'], ENT_QUOTES)?></p>
@@ -30,7 +25,7 @@ echo "</pre>";
         <div class="lot-item__cost-state">
           <div class="lot-item__rate">
             <span class="lot-item__amount">Текущая цена</span>
-            <span class="lot-item__cost"><?=toPriceFormat($lot_item['MAX_BET_PRICE']) ?? toPriceFormat($lot_item['START_PRICE'])?></span>
+            <span class="lot-item__cost"><?=toPriceFormat($lot_item['MAX_BET_PRICE'])??toPriceFormat($lot_item['START_PRICE'])?></span>
           </div>
           <div class="lot-item__min-cost">
             Мин. ставка <span><?=toPriceFormat($lot_item['MAX_BET_PRICE']+$lot_item['PRICE_STEP'])?></span>

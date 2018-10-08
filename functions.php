@@ -19,11 +19,14 @@ function include_template($name, $data) {
 }
 //Создадим функцию module2-task2
 function toPriceFormat($num) {
-    $number = ceil($num);
-    if ($number >= 1000) {
-        $number = number_format($number, 0, '.', ' ');
-    }
-    return $number.' &#8381;';
+  if ($num === NULL) {
+    return;
+  }
+  $number = ceil($num);
+  if ($number >= 1000) {
+      $number = number_format($number, 0, '.', ' ');
+  }
+  return $number.' &#8381;';
 }
 //Функция для определения времени до полуночи - module3-task2
 function getTimeToMidnight() {
@@ -55,10 +58,10 @@ function checkForExistanceDBres($checking_item)
     die();
   }
 }
-// Функция проверяет на существование результат запроса - если нет - отправляет 404
+// Функция отправляет запрос в БД и возвращает многомерный ассоциативный массив
 function get_DB_query_rows($query, $link) {
     $query_result = mysqli_query($link, $query);
-     if (!$query_result) {
+    if (!$query_result) {
       $error = mysqli_error($link);
       print("Ошибка в запросе $query: $error");
       die();
@@ -66,6 +69,7 @@ function get_DB_query_rows($query, $link) {
     $fetched_query_result = mysqli_fetch_all($query_result, MYSQLI_ASSOC);
     return $fetched_query_result;
 }
+// Функция отправляет запрос в БД и возвращает ассоциативный массив одного значения
 function get_DB_query_row($query, $link) {
     $query_result = mysqli_query($link, $query);
      if (!$query_result) {
@@ -75,4 +79,14 @@ function get_DB_query_row($query, $link) {
     }
     $fetched_query_result = mysqli_fetch_assoc($query_result);
     return $fetched_query_result;
+}
+// Функция отправляет запрос в БД и вставляет 1 значение в БД, возвращает ID вставленной записи
+function put_DB_query_row($query, $link) {
+    $query_result = mysqli_query($link, $query);
+     if (!$query_result) {
+      $error = mysqli_error($link);
+      print("Ошибка в запросе $query: $error");
+      die();
+    }
+    return mysqli_insert_id($link);
 }
