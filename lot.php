@@ -20,11 +20,10 @@ $lot_query = 'SELECT
 							lots.description as DESCRIPTION,
 							lots.image_url as IMAGE_URL,
               lots.date_end as FINISH_DATE,
-              lots.start_price as START_PRICE,
               lots.bet_step as PRICE_STEP,
 							categories.name as CATEGORY_NAME,
-              MAX(bets.price) as MAX_BET_PRICE,
-              COUNT(bets.id) as BETS_NUMBER
+              IFNULL(MAX(bets.price), lots.start_price) as PRICE,
+              COUNT(bets.id) as BETS_COUNT
 							FROM lots 
 							JOIN categories
 							ON lots.adv_category_id = categories.id
@@ -35,6 +34,8 @@ $lot_query = 'SELECT
               GROUP BY bets.lot_id';
 $lot_item = get_DB_query_row($lot_query, $link);
 checkForExistanceDBres($lot_item);
+//Определим минимальную ставку
+$lot_item['MIN_BET'] = $lot_item['PRICE']+$lot_item['PRICE_STEP'];
 
 //Запрос на получение ставок
 $bets_query = 'SELECT

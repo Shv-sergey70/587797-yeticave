@@ -25,22 +25,22 @@
         <div class="lot-item__cost-state">
           <div class="lot-item__rate">
             <span class="lot-item__amount">Текущая цена</span>
-            <span class="lot-item__cost"><?=toPriceFormat($lot_item['MAX_BET_PRICE'])??toPriceFormat($lot_item['START_PRICE'])?></span>
+            <span class="lot-item__cost"><?=toPriceFormat($lot_item['PRICE'])?></span>
           </div>
           <div class="lot-item__min-cost">
-            Мин. ставка <span><?=toPriceFormat($lot_item['MAX_BET_PRICE']+$lot_item['PRICE_STEP'])?></span>
+            Мин. ставка <span><?=toPriceFormat($lot_item['MIN_BET'])?></span>
           </div>
         </div>
         <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post">
           <p class="lot-item__form-item">
             <label for="cost">Ваша ставка</label>
-            <input id="cost" type="number" name="cost" placeholder='<?=number_format($lot_item['MAX_BET_PRICE']+$lot_item['PRICE_STEP'], 0, '', ' ')?>'>
+            <input id="cost" type="number" name="cost" placeholder='<?=number_format($lot_item['MIN_BET'], 0, '', ' ')?>'>
           </p>
           <button type="submit" class="button">Сделать ставку</button>
         </form>
       </div>
       <div class="history">
-        <h3>История ставок (<span><?=$lot_item['BETS_NUMBER']?></span>)</h3>
+        <h3>История ставок (<span><?=$lot_item['BETS_COUNT']?></span>)</h3>
         <table class="history__list">
           <?php foreach ($bets_list as $value):?>
             <tr class="history__item">
