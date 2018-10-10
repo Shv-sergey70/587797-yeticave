@@ -48,7 +48,7 @@
   <div class="form__container-three">
     <div class="form__item form__item--small <?=!empty($errors['START_PRICE'])?'form__item--invalid':''?>">
       <label for="START_PRICE">Начальная цена</label>
-      <input id="START_PRICE" type="number" name="START_PRICE" placeholder="0" value=<?=$lot['START_PRICE'] ?? ''?> required>
+      <input id="START_PRICE" type="number" name="START_PRICE" placeholder="0" value="<?=$lot['START_PRICE'] ?? ''?>" required>
       <span class="form__error">Введите начальную цену</span>
     </div>
     <div class="form__item form__item--small <?=!empty($errors['PRICE_STEP'])?'form__item--invalid':''?>">
