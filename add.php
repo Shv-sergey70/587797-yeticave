@@ -26,25 +26,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$errors['PRICE_STEP'] = 'Это поле должно быть целым числом больше нуля';
 	}
 	if (!empty($lot['FINISH_DATE'])) {
-		$date_ar = explode('-', $lot['FINISH_DATE']);
-		if (count($date_ar) !== 3) {
-			$errors['FINISH_DATE'] = 'Введите дату в формате ДД.ММ.ГГГГ';
-		} else {
-			$year = $date_ar[0];
-			$month = $date_ar[1];
-			$day = $date_ar[2];
-			if (!checkdate($month, $day, $year)) {
-				$errors['FINISH_DATE'] = 'Введите дату в формате ДД.ММ.ГГГГ';
-			} else if (strtotime($lot['FINISH_DATE']) < strtotime('+1 day')) {
+		$unixtime = strtotime($lot['FINISH_DATE']);
+		if ($unixtime) {
+			if ($unixtime >= strtotime('tomorrow')) {
+				$date_for_insert = date('Y-m-d', $unixtime);
+			} else {
 				$errors['FINISH_DATE'] = 'Указанная дата должна быть больше текущей даты хотя бы на один день';
 			}
+		} else {
+			$errors['FINISH_DATE'] = 'Введите дату в формате ДД.ММ.ГГГГ';
 		}
 	}
 	if (!empty($_FILES['IMAGE_URL']['name'])) {
 		$tmp_name = $_FILES['IMAGE_URL']['tmp_name'];
 		$original_name = $_FILES['IMAGE_URL']['name'];
 		$file_type = mime_content_type($tmp_name);
-		$new_name = uniqid('img_').'.'.pathinfo($_FILES['IMAGE_URL']['name'], PATHINFO_EXTENSION);
+		$file_extension = explode('/', $file_type)[1];
+		$new_name = uniqid('img_').'.'.$file_extension;
 
 		if ($file_type === 'image/png' || $file_type === 'image/jpeg') {
 			move_uploaded_file($tmp_name, 'img/'.$new_name);
@@ -60,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$category_check_query = "SELECT COUNT(*) AS ID_COUNT
 														 FROM categories
 														 WHERE id = ".$safe_CATEGORY_ID;
-		if (get_DB_query_row($category_check_query, $link)) {
+		if (!get_DB_query_row($category_check_query, $link)['ID_COUNT']) {
 			$errors['CATEGORY'] = 'Выберите категорию из списка';
 		}
 	}
@@ -80,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$safe_DESCRIPTION = mysqli_real_escape_string($link, $lot['DESCRIPTION']);
 		$safe_IMAGE_URL = mysqli_real_escape_string($link, $lot['IMAGE_URL']);
 		$safe_START_PRICE = intval($lot['START_PRICE']);
-		$safe_FINISH_DATE = mysqli_real_escape_string($link, $lot['FINISH_DATE']);
+		$safe_FINISH_DATE = mysqli_real_escape_string($link, $date_for_insert);
 		$safe_PRICE_STEP = intval($lot['PRICE_STEP']);
 
 		$lot_add_query = "INSERT INTO lots
