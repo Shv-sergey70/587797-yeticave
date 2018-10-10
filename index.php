@@ -3,6 +3,7 @@ require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
 $user = require_once('user.php');
+session_start();
 
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
