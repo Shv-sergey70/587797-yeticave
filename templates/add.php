@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="form__input-file">
-      <input class="visually-hidden" name='IMAGE_URL' type="file" id="photo2" value="" required>
+      <input class="visually-hidden" name='IMAGE_URL' type="file" id="photo2" value="" accept='image/jpeg, image/png' required>
       <label for="photo2">
         <span>+ Добавить</span>
       </label>

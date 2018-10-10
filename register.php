@@ -32,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$tmp_name = $_FILES['AVATAR']['tmp_name'];
 		$original_name = $_FILES['AVATAR']['name'];
 		$file_type = mime_content_type($tmp_name);
-		$new_name = uniqid('img_').'.'.pathinfo($_FILES['AVATAR']['name'], PATHINFO_EXTENSION);
+		$file_extension = explode('/', $file_type)[1];
+		$new_name = uniqid('img_').'.'.$file_extension;
 
 		if ($file_type === 'image/png' || $file_type === 'image/jpeg') {
 			move_uploaded_file($tmp_name, 'img/'.$new_name);
@@ -40,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		} else {
 			$errors['AVATAR'] = 'Загрузите картинку в формате jpg, jpeg или png';
 		}
+	} else {
+		$account['AVATAR'] = '';
 	}
 
 	if (count($errors)) {
@@ -56,15 +59,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$safe_PASSWORD = mysqli_real_escape_string($link, $account['PASSWORD']);
 		$safe_PASSWORD_HASH = password_hash($safe_PASSWORD, PASSWORD_DEFAULT);
 		$safe_MESSAGE = mysqli_real_escape_string($link, $account['MESSAGE']);
+		$safe_AVATAR = $account['AVATAR']; //тк мы его генерируем сами, не подвергаем экранированию
 
 		$user_add_query = "INSERT INTO users
 											SET
 											date_register = NOW(),
-											email = '".$safe_EMAIL."',
-											name = '".$safe_NAME."',
-											password = '".$safe_PASSWORD_HASH."',
-											avatar_url = '".$safe_START_PRICE."',
-											contacts = ".$safe_MESSAGE;
+											email = '$safe_EMAIL',
+											name = '$safe_NAME',
+											password = '$safe_PASSWORD_HASH',
+											avatar_url = '$safe_AVATAR',
+											contacts = '$safe_MESSAGE'";
 		$inserted_user_id = put_DB_query_row($user_add_query, $link);
 		header('Location: login.php');
 	}
