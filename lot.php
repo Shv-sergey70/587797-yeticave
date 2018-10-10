@@ -1,6 +1,7 @@
 <?php
 require_once('functions.php');
 $link = require_once('db_conn.php');
+$user = require_once('user.php');
 
 if (!isset($_GET['ID'])) {
 	header("HTTP/1.x 404 Not Found");
@@ -8,21 +9,21 @@ if (!isset($_GET['ID'])) {
 }
 $lot_id = intval($_GET['ID']);
 
+//Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
-$menu_items_DB = mysqli_query($link, $menu_items_query);
-checkDBError($menu_items_DB, $link);
+$menu_items = get_DB_query_rows($menu_items_query, $link);
 
-$menu_items = mysqli_fetch_all($menu_items_DB, MYSQLI_ASSOC);
-
+//Запрос на получение лота
 $lot_query = 'SELECT 
 							lots.id as ID,
 							lots.name as NAME,
 							lots.description as DESCRIPTION,
 							lots.image_url as IMAGE_URL,
               lots.date_end as FINISH_DATE,
-              lots.start_price as START_PRICE,
+              lots.bet_step as PRICE_STEP,
 							categories.name as CATEGORY_NAME,
-              MAX(bets.price) as MAX_BET_PRICE
+              IFNULL(MAX(bets.price), lots.start_price) as PRICE,
+              COUNT(bets.id) as BETS_COUNT
 							FROM lots 
 							JOIN categories
 							ON lots.adv_category_id = categories.id
@@ -31,12 +32,12 @@ $lot_query = 'SELECT
 							WHERE
               lots.date_end > CURDATE() AND lots.id = '.$lot_id.'
               GROUP BY bets.lot_id';
-$lot_item_DB = mysqli_query($link, $lot_query);
-checkDBError($lot_item_DB, $link);
-
-$lot_item = mysqli_fetch_assoc($lot_item_DB);
+$lot_item = get_DB_query_row($lot_query, $link);
 checkForExistanceDBres($lot_item);
+//Определим минимальную ставку
+$lot_item['MIN_BET'] = $lot_item['PRICE']+$lot_item['PRICE_STEP'];
 
+//Запрос на получение ставок
 $bets_query = 'SELECT
               bets.lot_id,
               bets.id as ID,
@@ -46,16 +47,9 @@ $bets_query = 'SELECT
               FROM bets
               JOIN users 
               ON bets.user_id = users.id
-              WHERE bets.lot_id = '.$lot_id;
-
-$bets_list_DB = mysqli_query($link, $bets_query);
-checkDBError($bets_list_DB, $link);
-
-$bets_list = mysqli_fetch_all($bets_list_DB, MYSQLI_ASSOC);
-
-$is_auth = rand(0, 1);
-$user_name = 'Сергей'; // укажите здесь ваше имя
-$user_avatar = 'img/user.jpg';
+              WHERE bets.lot_id = '.$lot_id.'
+              ORDER BY bets.date_create DESC';
+$bets_list = get_DB_query_rows($bets_query, $link);
 
 $page_content = include_template('lot.php', 
   [
@@ -68,7 +62,6 @@ $layout_content = include_template('layout.php',
     'content' => $page_content, 
     'menu_items' => $menu_items, 
     'title' => 'Yeticave', 
-    'is_auth'=>$is_auth, 
-    'user_name'=>$user_name
+    'user'=>$user
   ]);
 print($layout_content);
