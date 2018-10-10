@@ -37,6 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$errors['FINISH_DATE'] = 'Введите дату в формате ДД.ММ.ГГГГ';
 		}
 	}
+	if (!empty($lot['CATEGORY'])) {
+		$safe_CATEGORY_ID = intval($lot['CATEGORY']);
+		$category_check_query = "SELECT COUNT(*) AS ID_COUNT
+														 FROM categories
+														 WHERE id = ".$safe_CATEGORY_ID;
+		if (!mysqli_num_rows(mysqli_query($link, $category_check_query))) {
+			$errors['CATEGORY'] = 'Выберите категорию из списка';
+		}
+	}
 	if (!empty($_FILES['IMAGE_URL']['name'])) {
 		$tmp_name = $_FILES['IMAGE_URL']['tmp_name'];
 		$original_name = $_FILES['IMAGE_URL']['name'];
@@ -52,15 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 	} else {
 		$errors['IMAGE_URL'] = 'Вы не загрузили картинку';
-	}
-	if (!empty($lot['CATEGORY'])) {
-		$safe_CATEGORY_ID = intval($lot['CATEGORY']);
-		$category_check_query = "SELECT COUNT(*) AS ID_COUNT
-														 FROM categories
-														 WHERE id = ".$safe_CATEGORY_ID;
-		if (!get_DB_query_row($category_check_query, $link)['ID_COUNT']) {
-			$errors['CATEGORY'] = 'Выберите категорию из списка';
-		}
 	}
 
 	if (count($errors)) {
