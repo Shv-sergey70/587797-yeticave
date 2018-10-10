@@ -25,6 +25,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (!empty($lot['PRICE_STEP']) && (!ctype_digit($lot['PRICE_STEP']) || intval($lot['PRICE_STEP']) <= 0)) {
 		$errors['PRICE_STEP'] = 'Это поле должно быть целым числом больше нуля';
 	}
+	if (!empty($lot['FINISH_DATE'])) {
+		$date_ar = explode('-', $lot['FINISH_DATE']);
+		if (count($date_ar) !== 3) {
+			$errors['FINISH_DATE'] = 'Введите дату в формате ДД.ММ.ГГГГ';
+		} else {
+			$year = $date_ar[0];
+			$month = $date_ar[1];
+			$day = $date_ar[2];
+			if (!checkdate($month, $day, $year)) {
+				$errors['FINISH_DATE'] = 'Введите дату в формате ДД.ММ.ГГГГ';
+			} else if (strtotime($lot['FINISH_DATE']) < strtotime('+1 day')) {
+				$errors['FINISH_DATE'] = 'Указанная дата должна быть больше текущей даты хотя бы на один день';
+			}
+		}
+	}
 	if (!empty($_FILES['IMAGE_URL']['name'])) {
 		$tmp_name = $_FILES['IMAGE_URL']['tmp_name'];
 		$original_name = $_FILES['IMAGE_URL']['name'];
@@ -40,6 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	} else {
 		$errors['IMAGE_URL'] = 'Вы не загрузили картинку';
 	}
+	if (!empty($lot['CATEGORY'])) {
+		$safe_CATEGORY_ID = intval($lot['CATEGORY']);
+		$category_check_query = "SELECT COUNT(*) AS ID_COUNT
+														 FROM categories
+														 WHERE id = ".$safe_CATEGORY_ID;
+		if (get_DB_query_row($category_check_query, $link)) {
+			$errors['CATEGORY'] = 'Выберите категорию из списка';
+		}
+	}
+
 	if (count($errors)) {
 		$page_content = include_template('add.php', 
 	  [
@@ -57,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$safe_START_PRICE = intval($lot['START_PRICE']);
 		$safe_FINISH_DATE = mysqli_real_escape_string($link, $lot['FINISH_DATE']);
 		$safe_PRICE_STEP = intval($lot['PRICE_STEP']);
-		$safe_CATEGORY_ID = intval($lot['CATEGORY']);
+
 		$lot_add_query = "INSERT INTO lots
 											SET
 											date_create = NOW(),
@@ -72,12 +97,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$inserted_lot_id = put_DB_query_row($lot_add_query, $link);
 		header('Location: lot.php?ID='.$inserted_lot_id);
 	}
-}
-
-$page_content = include_template('add.php', 
+} else {
+	$page_content = include_template('add.php', 
   [
     'menu_items' => $menu_items
   ]);
+}
+
 
 $layout_content = include_template('layout.php', 
   [

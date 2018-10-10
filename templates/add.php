@@ -58,7 +58,7 @@
     </div>
     <div class="form__item <?=!empty($errors['FINISH_DATE'])?'form__item--invalid':''?>">
       <label for="FINISH_DATE">Дата окончания торгов</label>
-      <input class="form__input-date" id="FINISH_DATE" type="date" name="FINISH_DATE" value=<?=$lot['FINISH_DATE'] ?? ''?> required>
+      <input class="form__input-date" id="FINISH_DATE" type="date" name="FINISH_DATE" value='<?=$lot['FINISH_DATE'] ?? ''?>' required>
       <span class="form__error">Введите дату завершения торгов</span>
     </div>
   </div>
