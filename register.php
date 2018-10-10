@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (!empty($account['EMAIL'])) {
 		$safe_EMAIL = mysqli_real_escape_string($link, $account['EMAIL']);
 		$email_query = 'SELECT COUNT(*) AS EMAILS_COUNT FROM users WHERE email = "'.$safe_EMAIL.'"';
-		if (get_DB_query_row($email_query, $link)['EMAILS_COUNT']) {
-				$errors['EMAIL'] = 'Такой E-mail адрес уже зарегистрирован на сайте';
+		if (!mysqli_num_rows(mysqli_query($link, $email_query))) {
+			$errors['EMAIL'] = 'Такой E-mail адрес уже зарегистрирован на сайте';
 		}
 	}
 	if (!empty($_FILES['AVATAR']['name'])) {
