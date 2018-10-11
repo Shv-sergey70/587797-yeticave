@@ -37,23 +37,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$errors['FINISH_DATE'] = 'Введите дату в формате ДД.ММ.ГГГГ';
 		}
 	}
+	//Проверка существования выбранной категории
 	if (!empty($lot['CATEGORY'])) {
 		$safe_CATEGORY_ID = intval($lot['CATEGORY']);
-		$category_check_query = "SELECT COUNT(*) AS ID_COUNT
+		$category_check_query = "SELECT id AS ID
 														 FROM categories
 														 WHERE id = ".$safe_CATEGORY_ID;
 		if (!mysqli_num_rows(mysqli_query($link, $category_check_query))) {
 			$errors['CATEGORY'] = 'Выберите категорию из списка';
 		}
 	}
+	//Проверка изображения
 	if (!empty($_FILES['IMAGE_URL']['name'])) {
 		$tmp_name = $_FILES['IMAGE_URL']['tmp_name'];
 		$original_name = $_FILES['IMAGE_URL']['name'];
+		$mime_extension_map = [
+			'image/png' => 'png',
+			'image/jpeg' => 'jpeg',
+			'image/jpg' => 'jpg'
+		];
 		$file_type = mime_content_type($tmp_name);
-		$file_extension = explode('/', $file_type)[1];
-		$new_name = uniqid('img_').'.'.$file_extension;
-
-		if ($file_type === 'image/png' || $file_type === 'image/jpeg') {
+		if (isset($mime_extension_map[$file_type])) {
+			$file_extension = $mime_extension_map[$file_type];
+			$new_name = uniqid('img_').'.'.$file_extension;
 			move_uploaded_file($tmp_name, 'img/'.$new_name);
 			$lot['IMAGE_URL'] = 'img/'.$new_name;
 		} else {
@@ -94,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 											adv_category_id = ".$safe_CATEGORY_ID;
 		$inserted_lot_id = put_DB_query_row($lot_add_query, $link);
 		header('Location: lot.php?ID='.$inserted_lot_id);
+		die();
 	}
 } else {
 	$page_content = include_template('add.php', 
