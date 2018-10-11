@@ -18,24 +18,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$errors[$value] = 'Это поле надо заполнить';
 		}
 	}
+	//Проверка валидности и занятости EMAILа
 	if (!empty($account['EMAIL']) && !filter_var($account['EMAIL'], FILTER_VALIDATE_EMAIL)) {
 		$errors['EMAIL'] = 'Введите валидный E-mail адрес';
-	}
-	if (!empty($account['EMAIL'])) {
+	} else if (!empty($account['EMAIL'])) {
 		$safe_EMAIL = mysqli_real_escape_string($link, $account['EMAIL']);
-		$email_query = 'SELECT COUNT(*) AS EMAILS_COUNT FROM users WHERE email = "'.$safe_EMAIL.'"';
-		if (!mysqli_num_rows(mysqli_query($link, $email_query))) {
+		$email_query = 'SELECT email AS EMAIL FROM users WHERE email = "'.$safe_EMAIL.'"';
+		if (mysqli_num_rows(mysqli_query($link, $email_query))) {
 			$errors['EMAIL'] = 'Такой E-mail адрес уже зарегистрирован на сайте';
 		}
 	}
+	
 	if (!empty($_FILES['AVATAR']['name'])) {
 		$tmp_name = $_FILES['AVATAR']['tmp_name'];
 		$original_name = $_FILES['AVATAR']['name'];
+		$mime_extension_map = [
+			'image/png' => 'png',
+			'image/jpeg' => 'jpeg',
+			'image/jpg' => 'jpg'
+		];
 		$file_type = mime_content_type($tmp_name);
-		$file_extension = explode('/', $file_type)[1];
-		$new_name = uniqid('img_').'.'.$file_extension;
-
-		if ($file_type === 'image/png' || $file_type === 'image/jpeg') {
+		if (isset($mime_extension_map[$file_type])) {
+			$file_extension = $mime_extension_map[$file_type];
+			$new_name = uniqid('img_').'.'.$file_extension;
 			move_uploaded_file($tmp_name, 'img/'.$new_name);
 			$account['AVATAR'] = 'img/'.$new_name;
 		} else {
@@ -56,8 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	} else {
 		//Запрос на добавление нового пользователя
 		$safe_NAME = mysqli_real_escape_string($link, $account['NAME']);
-		$safe_PASSWORD = mysqli_real_escape_string($link, $account['PASSWORD']);
-		$safe_PASSWORD_HASH = password_hash($safe_PASSWORD, PASSWORD_DEFAULT);
+		$PASSWORD_HASH = password_hash($account['PASSWORD'], PASSWORD_DEFAULT);
 		$safe_MESSAGE = mysqli_real_escape_string($link, $account['MESSAGE']);
 		$safe_AVATAR = $account['AVATAR']; //тк мы его генерируем сами, не подвергаем экранированию
 
@@ -66,11 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 											date_register = NOW(),
 											email = '$safe_EMAIL',
 											name = '$safe_NAME',
-											password = '$safe_PASSWORD_HASH',
+											password = '$PASSWORD_HASH',
 											avatar_url = '$safe_AVATAR',
 											contacts = '$safe_MESSAGE'";
 		$inserted_user_id = put_DB_query_row($user_add_query, $link);
 		header('Location: login.php');
+		die();
 	}
 } else {
 	$page_content = include_template('register.php', 
