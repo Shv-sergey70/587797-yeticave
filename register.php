@@ -29,25 +29,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 	}
 	
-	if (!empty($_FILES['AVATAR']['name'])) {
-		$tmp_name = $_FILES['AVATAR']['tmp_name'];
-		$original_name = $_FILES['AVATAR']['name'];
-		$mime_extension_map = [
-			'image/png' => 'png',
-			'image/jpeg' => 'jpeg',
-			'image/jpg' => 'jpg'
-		];
-		$file_type = mime_content_type($tmp_name);
-		if (isset($mime_extension_map[$file_type])) {
-			$file_extension = $mime_extension_map[$file_type];
-			$new_name = uniqid('img_').'.'.$file_extension;
-			move_uploaded_file($tmp_name, 'img/'.$new_name);
-			$account['AVATAR'] = 'img/'.$new_name;
+	if (!count($errors)) { //Выполнить проверку, только если нет других ошибок (для исключения дублирования)
+		if (!empty($_FILES['AVATAR']['name'])) {
+			$tmp_name = $_FILES['AVATAR']['tmp_name'];
+			$original_name = $_FILES['AVATAR']['name'];
+			$mime_extension_map = [
+				'image/png' => 'png',
+				'image/jpeg' => 'jpeg',
+				'image/jpg' => 'jpg'
+			];
+			$file_type = mime_content_type($tmp_name);
+			if (isset($mime_extension_map[$file_type])) {
+				$file_extension = $mime_extension_map[$file_type];
+				$new_name = uniqid('img_').'.'.$file_extension;
+				move_uploaded_file($tmp_name, 'img/'.$new_name);
+				$account['AVATAR'] = 'img/'.$new_name;
+			} else {
+				$errors['AVATAR'] = 'Загрузите картинку в формате jpg, jpeg или png';
+			}
 		} else {
-			$errors['AVATAR'] = 'Загрузите картинку в формате jpg, jpeg или png';
+			$account['AVATAR'] = '';
 		}
-	} else {
-		$account['AVATAR'] = '';
 	}
 
 	if (count($errors)) {

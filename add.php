@@ -51,26 +51,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$errors['CATEGORY'] = 'Выберите категорию из списка';
 		}
 	}
+
 	//Проверка изображения
-	if (!empty($_FILES['IMAGE_URL']['name'])) {
-		$tmp_name = $_FILES['IMAGE_URL']['tmp_name'];
-		$original_name = $_FILES['IMAGE_URL']['name'];
-		$mime_extension_map = [
-			'image/png' => 'png',
-			'image/jpeg' => 'jpeg',
-			'image/jpg' => 'jpg'
-		];
-		$file_type = mime_content_type($tmp_name);
-		if (isset($mime_extension_map[$file_type])) {
-			$file_extension = $mime_extension_map[$file_type];
-			$new_name = uniqid('img_').'.'.$file_extension;
-			move_uploaded_file($tmp_name, 'img/'.$new_name);
-			$lot['IMAGE_URL'] = 'img/'.$new_name;
+	if (!count($errors)) { //Выполнить проверку, только если нет других ошибок (для исключения дублирования)
+		if (!empty($_FILES['IMAGE_URL']['name'])) {
+			$tmp_name = $_FILES['IMAGE_URL']['tmp_name'];
+			$original_name = $_FILES['IMAGE_URL']['name'];
+			$mime_extension_map = [
+				'image/png' => 'png',
+				'image/jpeg' => 'jpeg',
+				'image/jpg' => 'jpg'
+			];
+			$file_type = mime_content_type($tmp_name);
+			if (isset($mime_extension_map[$file_type])) {
+				$file_extension = $mime_extension_map[$file_type];
+				$new_name = uniqid('img_').'.'.$file_extension;
+				move_uploaded_file($tmp_name, 'img/'.$new_name);
+				$lot['IMAGE_URL'] = 'img/'.$new_name;
+			} else {
+				$errors['IMAGE_URL'] = 'Загрузите картинку в формате jpg, jpeg или png';
+			}
 		} else {
-			$errors['IMAGE_URL'] = 'Загрузите картинку в формате jpg, jpeg или png';
+			$errors['IMAGE_URL'] = 'Вы не загрузили картинку';
 		}
-	} else {
-		$errors['IMAGE_URL'] = 'Вы не загрузили картинку';
 	}
 
 	if (count($errors)) {
@@ -79,8 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	    'menu_items' => $menu_items,
 	    'errors' => $errors,
 	    'dict' => $dict,
-	    'lot' => $lot,
-	    'USER'=>$_SESSION['USER']
+	    'lot' => $lot
 	  ]);
 	} else {
 		//Запрос на добавление нового лота
@@ -91,17 +93,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$safe_START_PRICE = intval($lot['START_PRICE']);
 		$safe_FINISH_DATE = mysqli_real_escape_string($link, $date_for_insert);
 		$safe_PRICE_STEP = intval($lot['PRICE_STEP']);
+		$user_id = $_SESSION['USER']['id']; //Нужно ли проверять на существование в сессии USER?
 
 		$lot_add_query = "INSERT INTO lots
 											SET
 											date_create = NOW(),
-											name = '".$safe_NAME."',
-											description = '".$safe_DESCRIPTION."',
-											image_url = '".$safe_IMAGE_URL."',
-											start_price = '".$safe_START_PRICE."',
-											date_end = '".$safe_FINISH_DATE."',
-											bet_step = '".$safe_PRICE_STEP."',
-											author_id = 1,
+											name = '$safe_NAME',
+											description = '$safe_DESCRIPTION',
+											image_url = '$safe_IMAGE_URL',
+											start_price = '$safe_START_PRICE',
+											date_end = '$safe_FINISH_DATE',
+											bet_step = '$safe_PRICE_STEP',
+											author_id = '$user_id',
 											adv_category_id = ".$safe_CATEGORY_ID;
 		$inserted_lot_id = put_DB_query_row($lot_add_query, $link);
 		header('Location: lot.php?ID='.$inserted_lot_id);
@@ -110,8 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
 	$page_content = include_template('add.php', 
   [
-    'menu_items' => $menu_items,
-    'USER'=>$_SESSION['USER']
+    'menu_items' => $menu_items
   ]);
 }
 

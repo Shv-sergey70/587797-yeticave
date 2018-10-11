@@ -22,6 +22,7 @@ $lot_query = 'SELECT
 							lots.image_url as IMAGE_URL,
               lots.date_end as FINISH_DATE,
               lots.bet_step as PRICE_STEP,
+              lots.author_id as AUTHOR_ID,
 							categories.name as CATEGORY_NAME,
               IFNULL(MAX(bets.price), lots.start_price) as PRICE,
               COUNT(bets.id) as BETS_COUNT
@@ -44,6 +45,7 @@ $bets_query = 'SELECT
               bets.id as ID,
               bets.date_create as DATE_CREATE,
               bets.price as PRICE,
+              bets.user_id as AUTHOR_ID,
               users.name as USER_NAME
               FROM bets
               JOIN users 
@@ -51,9 +53,23 @@ $bets_query = 'SELECT
               WHERE bets.lot_id = '.$lot_id.'
               ORDER BY bets.date_create DESC';
 $bets_list = get_DB_query_rows($bets_query, $link);
-// echo "<pre>";
-  // var_dump($lot_item['ID']);
-// echo "</pre>";
+
+//Определение доступа к добавлению ставки
+$can_create_bet = true;
+if (!isset($_SESSION['USER'])) {
+  $can_create_bet = false;
+} elseif ((int)$lot_item['AUTHOR_ID'] === (int)$_SESSION['USER']['id']) {
+  $can_create_bet = false;
+} elseif(strtotime($lot_item['FINISH_DATE']) < time()) {
+  $can_create_bet = false;
+} elseif (!empty($bets_list)) {
+  foreach ($bets_list as $value) {
+    if ((int)$value['AUTHOR_ID'] === (int)$_SESSION['USER']['id']) {
+      $can_create_bet = false;
+    }
+  }
+}
+
 //Добавление новой ставки
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $new_bet = $_POST;
@@ -73,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       'bets_list' => $bets_list,
       'new_bet' => $new_bet,
       'errors' => $errors,
-      'USER'=>$_SESSION['USER']
+      'can_create_bet' => $can_create_bet
     ]);
   } else {
     //Запрос на добавление новой ставки
@@ -97,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     'menu_items' => $menu_items, 
     'lot_item' => $lot_item,
     'bets_list' => $bets_list,
-    'USER'=>$_SESSION['USER']
+    'can_create_bet' => $can_create_bet
   ]);
 }
 
