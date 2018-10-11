@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	} else {
 		//Запрос на добавление нового пользователя
 		$safe_NAME = mysqli_real_escape_string($link, $account['NAME']);
-		$PASSWORD_HASH = password_hash($account['PASSWORD'], PASSWORD_DEFAULT);
+		$PASSWORD_HASH = mysqli_real_escape_string(password_hash($account['PASSWORD'], PASSWORD_DEFAULT));
 		$safe_MESSAGE = mysqli_real_escape_string($link, $account['MESSAGE']);
 		$safe_AVATAR = $account['AVATAR']; //тк мы его генерируем сами, не подвергаем экранированию
 
