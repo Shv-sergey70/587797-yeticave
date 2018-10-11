@@ -79,7 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	    'menu_items' => $menu_items,
 	    'errors' => $errors,
 	    'dict' => $dict,
-	    'lot' => $lot
+	    'lot' => $lot,
+	    'USER'=>$_SESSION['USER']
 	  ]);
 	} else {
 		//Запрос на добавление нового лота
@@ -109,7 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
 	$page_content = include_template('add.php', 
   [
-    'menu_items' => $menu_items
+    'menu_items' => $menu_items,
+    'USER'=>$_SESSION['USER']
   ]);
 }
 

@@ -51,14 +51,56 @@ $bets_query = 'SELECT
               WHERE bets.lot_id = '.$lot_id.'
               ORDER BY bets.date_create DESC';
 $bets_list = get_DB_query_rows($bets_query, $link);
+// echo "<pre>";
+  // var_dump($lot_item['ID']);
+// echo "</pre>";
+//Добавление новой ставки
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $new_bet = $_POST;
+  $errors = [];
+  $options = ['options' => ['min_range' => $lot_item['MIN_BET']]];
+  if (empty($new_bet['COST'])) {
+    $errors['COST'] = 'Это поле надо заполнить';
+  } else if (!filter_var($new_bet['COST'], FILTER_VALIDATE_INT, $options)) {
+    $errors['COST'] = 'Ваша ставка должна быть целым числом, больше минимальной ставки';
+  }
 
-$page_content = include_template('lot.php', 
+  if (count($errors)) {
+    $page_content = include_template('lot.php', 
+    [
+      'menu_items' => $menu_items,
+      'lot_item' => $lot_item,
+      'bets_list' => $bets_list,
+      'new_bet' => $new_bet,
+      'errors' => $errors,
+      'USER'=>$_SESSION['USER']
+    ]);
+  } else {
+    //Запрос на добавление новой ставки
+    $user_id = intval($_SESSION['USER']['id']);
+    $lot_id = intval($lot_item['ID']);
+    $safe_COST = intval($new_bet['COST']);
+
+    $bet_add_query = "INSERT INTO bets
+                      SET
+                      date_create = NOW(),
+                      price = '$safe_COST',
+                      user_id = '$user_id',
+                      lot_id = '$lot_id'";
+    put_DB_query_row($bet_add_query, $link);
+    header('Location: lot.php?ID='.$lot_id);
+    die();
+  }
+} else {
+  $page_content = include_template('lot.php', 
   [
     'menu_items' => $menu_items, 
     'lot_item' => $lot_item,
     'bets_list' => $bets_list,
     'USER'=>$_SESSION['USER']
   ]);
+}
+
 $layout_content = include_template('layout.php', 
   [
     'content' => $page_content, 
