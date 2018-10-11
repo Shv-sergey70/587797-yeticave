@@ -19,9 +19,6 @@ function include_template($name, $data) {
 }
 //Создадим функцию module2-task2
 function toPriceFormat($num) {
-  if ($num === NULL) {
-    return 'Не задано значение';
-  }
   $number = ceil($num);
   if ($number >= 1000) {
       $number = number_format($number, 0, '.', ' ');
