@@ -1,12 +1,4 @@
-<nav class="nav">
-  <ul class="nav__list container">
-    <?foreach ($menu_items as $value):?>
-      <li class="nav__item">
-        <a href="all-lots.html"><?=$value['name']?></a>
-      </li>
-    <?endforeach;?>
-  </ul>
-</nav>
+<?=include_template('_main_menu.php', ['menu_items' => $menu_items]); //Подключение меню?>
 <form class="form form--add-lot container form--invalid" action="add.php" method="POST" enctype="multipart/form-data">
   <h2>Добавление лота</h2>
   <div class="form__container-two">

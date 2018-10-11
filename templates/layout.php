@@ -23,12 +23,13 @@
 
         <nav class="user-menu">
 
-        <?php if (!empty($_SESSION['USER'])): ?>
+        <?php if (isset($USER)): ?>
           <div class="user-menu__image">
-            <img src='<?=(!empty($_SESSION['USER']['avatar_url']))?htmlspecialchars($_SESSION['USER']['avatar_url']):'img/user.jpg'?>' width="40" height="40" alt="Пользователь">
+            <img src='<?=(!empty($USER['avatar_url']))?$USER['avatar_url']:'img/user.jpg'?>' width="40" height="40" alt="Пользователь">
           </div>
           <div class="user-menu__logged">
-            <p><?=htmlspecialchars($_SESSION['USER']['name'])?></p>
+            <p><?=htmlspecialchars($USER['name'])?></p>
+            <a href="logout.php">Выйти</a>
           </div>
         <?php else: ?>
           <ul class="user-menu__list">
@@ -44,21 +45,12 @@
         </nav>
     </div>
 </header>
-
 <main class="container">
     <?=$content?>
 </main>
 </div>
 <footer class="main-footer">
-    <nav class="nav">
-        <ul class="nav__list container">
-            <?foreach($menu_items as $value):?>
-            <li class="nav__item">
-                <a href="pages/all-lots.html"><?=$value['name']?></a>
-            </li>
-            <?endforeach;?>
-        </ul>
-    </nav>
+    <?=include_template('_main_menu.php', ['menu_items' => $menu_items]); //Подключение меню?>
     <div class="main-footer__bottom container">
         <div class="main-footer__copyright">
             <p>© 2018, YetiCave</p>

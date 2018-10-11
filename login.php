@@ -2,7 +2,7 @@
 require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
-$user = require_once('user.php');
+session_start();
 
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
@@ -26,15 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$email_query = "SELECT * FROM users WHERE email = '$safe_EMAIL'";
 		$user_from_db = get_DB_query_row($email_query, $link);
 		if (!$user_from_db) {
-			$errors['EMAIL'] = 'Пользователь с таким EMAIL не зарегистрирован';
+			$errors['WRONG'] = 'Вы ввели неверный email/пароль';
+		} else if (!empty($login['PASSWORD'])) {
+			//Запрос на сравнение паролей
+			if (!password_verify($login['PASSWORD'], $user_from_db['password'])) {
+				$errors['WRONG'] = 'Вы ввели неверный email/пароль';
+			} 
 		}
-	}
-	//Запрос на сравнение паролей
-	if (!empty($login['PASSWORD'])) {
-		$safe_PASSWORD = mysqli_real_escape_string($link, $login['PASSWORD']);
-		if (!password_verify($safe_PASSWORD, $user_from_db['password'])) {
-			$errors['PASSWORD'] = 'Неверно введен пароль';
-		} 
 	}
 
 	if (count($errors)) {
@@ -46,9 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	    'login' => $login
 	  ]);
 	} else {
-		session_start();
 		$_SESSION['USER'] = $user_from_db;
 		header('Location: '.MAIN_DIR);
+		die();
 	}
 } else {
 	$page_content = include_template('login.php', 
@@ -61,6 +59,7 @@ $layout_content = include_template('layout.php',
   [
     'content' => $page_content, 
     'menu_items' => $menu_items, 
-    'title' => 'Yeticave'
+    'title' => 'Yeticave',
+    'USER'=>$_SESSION['USER']
   ]);
 print($layout_content);

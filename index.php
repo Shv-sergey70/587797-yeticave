@@ -2,7 +2,6 @@
 require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
-$user = require_once('user.php');
 session_start();
 
 //Запрос на получение пунктов меню
@@ -26,7 +25,6 @@ $catalog_items_query = 'SELECT
                         ORDER BY lots.date_create DESC';
 $catalog_items = get_DB_query_rows($catalog_items_query, $link);
 
-
 $page_content = include_template('index.php', 
   [
     'menu_items' => $menu_items, 
@@ -37,6 +35,6 @@ $layout_content = include_template('layout.php',
     'content' => $page_content, 
     'menu_items' => $menu_items, 
     'title' => 'Yeticave', 
-    'user'=>$user
+    'USER'=>$_SESSION['USER']
   ]);
 print($layout_content);

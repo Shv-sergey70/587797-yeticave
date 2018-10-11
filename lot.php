@@ -1,7 +1,8 @@
 <?php
 require_once('functions.php');
+require_once('const.php');
 $link = require_once('db_conn.php');
-$user = require_once('user.php');
+session_start();
 
 if (!isset($_GET['ID'])) {
 	header("HTTP/1.x 404 Not Found");
@@ -55,13 +56,14 @@ $page_content = include_template('lot.php',
   [
     'menu_items' => $menu_items, 
     'lot_item' => $lot_item,
-    'bets_list' => $bets_list
+    'bets_list' => $bets_list,
+    'USER'=>$_SESSION['USER']
   ]);
 $layout_content = include_template('layout.php', 
   [
     'content' => $page_content, 
     'menu_items' => $menu_items, 
     'title' => 'Yeticave', 
-    'user'=>$user
+    'USER'=>$_SESSION['USER']
   ]);
 print($layout_content);

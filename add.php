@@ -2,8 +2,12 @@
 require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
-$user = require_once('user.php');
-
+session_start();
+//Ограничен доступ не анонимных пользователей
+if (!isset($_SESSION['USER'])) {
+	header('HTTP/1.x 403');
+	die();
+}
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
 $menu_items = get_DB_query_rows($menu_items_query, $link);
@@ -115,6 +119,6 @@ $layout_content = include_template('layout.php',
     'content' => $page_content, 
     'menu_items' => $menu_items, 
     'title' => 'Yeticave', 
-    'user'=>$user
+    'USER'=>$_SESSION['USER']
   ]);
 print($layout_content);
