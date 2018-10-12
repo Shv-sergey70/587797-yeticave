@@ -3,6 +3,7 @@ require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
 session_start();
+$USER = isset($_SESSION['USER'])?$_SESSION['USER']:NULL;
 
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
@@ -63,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	} else {
 		//Запрос на добавление нового пользователя
 		$safe_NAME = mysqli_real_escape_string($link, $account['NAME']);
-		$PASSWORD_HASH = password_hash($account['PASSWORD'], PASSWORD_DEFAULT);
+		$PASSWORD_HASH = mysqli_real_escape_string(password_hash($account['PASSWORD'], PASSWORD_DEFAULT));
 		$safe_MESSAGE = mysqli_real_escape_string($link, $account['MESSAGE']);
 		$safe_AVATAR = $account['AVATAR']; //тк мы его генерируем сами, не подвергаем экранированию
 
@@ -91,6 +92,6 @@ $layout_content = include_template('layout.php',
     'content' => $page_content, 
     'menu_items' => $menu_items, 
     'title' => 'Yeticave', 
-    'USER'=>$_SESSION['USER']
+    'USER'=> $USER
   ]);
 print($layout_content);

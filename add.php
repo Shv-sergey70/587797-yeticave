@@ -3,8 +3,9 @@ require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
 session_start();
+$USER = isset($_SESSION['USER'])?$_SESSION['USER']:NULL;
 //Ограничен доступ не анонимных пользователей
-if (!isset($_SESSION['USER'])) {
+if (!$USER) {
 	header('HTTP/1.x 403');
 	die();
 }
@@ -123,6 +124,6 @@ $layout_content = include_template('layout.php',
     'content' => $page_content, 
     'menu_items' => $menu_items, 
     'title' => 'Yeticave', 
-    'USER'=>$_SESSION['USER']
+    'USER'=> $USER
   ]);
 print($layout_content);
