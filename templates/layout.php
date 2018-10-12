@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="page-wrapper">
-
+    
 <header class="main-header">
     <div class="main-header__container container">
         <h1 class="visually-hidden">YetiCave</h1>
@@ -23,7 +23,7 @@
 
         <nav class="user-menu">
 
-        <?php if (isset($USER)): ?>
+        <?php if ($USER): ?>
           <div class="user-menu__image">
             <img src='<?=(!empty($USER['avatar_url']))?$USER['avatar_url']:'img/user.jpg'?>' width="40" height="40" alt="Пользователь">
           </div>

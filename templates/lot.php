@@ -10,7 +10,7 @@
       <p class="lot-item__description"><?=htmlspecialchars($lot_item['DESCRIPTION'], ENT_QUOTES)?></p>
     </div>
     <div class="lot-item__right">
-      <?php if(isset($USER)):?>
+      <?php if($USER):?>
         <div class="lot-item__state">
           <div class="lot-item__timer timer">
             <?=getTimeDiff($lot_item['FINISH_DATE'])?>

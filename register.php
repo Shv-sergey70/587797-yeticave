@@ -3,6 +3,7 @@ require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
 session_start();
+$USER = isset($_SESSION['USER'])?$_SESSION['USER']:NULL;
 
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
@@ -31,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	
 	if (!empty($_FILES['AVATAR']['name'])) {
 		$tmp_name = $_FILES['AVATAR']['tmp_name'];
-		$original_name = $_FILES['AVATAR']['name'];
 		$mime_extension_map = [
 			'image/png' => 'png',
 			'image/jpeg' => 'jpeg',
@@ -89,6 +89,6 @@ $layout_content = include_template('layout.php',
     'content' => $page_content, 
     'menu_items' => $menu_items, 
     'title' => 'Yeticave', 
-    'USER'=>$_SESSION['USER']
+    'USER'=> $USER
   ]);
 print($layout_content);
