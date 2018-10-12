@@ -6,12 +6,12 @@
   <?php endif;?>
   <div class="form__item <?=!empty($errors['EMAIL'])?'form__item--invalid':''?>">
     <label for="email">E-mail*</label>
-    <input id="email" type="text" name="EMAIL" placeholder="Введите e-mail" value="<?=$login['EMAIL']??''?>" required>
+    <input id="email" type="text" name="EMAIL" placeholder="Введите e-mail" value="<?=htmlspecialchars($login['EMAIL']??'')?>" required>
     <span class="form__error"><?=$errors['EMAIL']??''?></span>
   </div>
   <div class="form__item form__item--last <?=!empty($errors['PASSWORD'])?'form__item--invalid':''?>">
     <label for="password">Пароль*</label>
-    <input id="password" type="password" name="PASSWORD" placeholder="Введите пароль" value="<?=$login['PASSWORD']??''?>" required>
+    <input id="password" type="password" name="PASSWORD" placeholder="Введите пароль" value="<?=htmlspecialchars($login['PASSWORD']??'')?>" required>
     <span class="form__error"><?=$errors['PASSWORD']??''?></span>
   </div>
   <button type="submit" class="button">Войти</button>

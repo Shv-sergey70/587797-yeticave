@@ -87,3 +87,63 @@ function put_DB_query_row($query, $link) {
     }
     return mysqli_insert_id($link);
 }
+//Функция проверяет картинку, загруженную юзером, на соответствие типу
+function checkUserImageFromForm($file, &$item, &$errors_arr, $isRequired = true) {
+  if (!empty($file['name'])) {
+    $tmp_name = $file['tmp_name'];
+    $mime_extension_map = [
+      'image/png' => 'png',
+      'image/jpeg' => 'jpeg',
+      'image/jpg' => 'jpg'
+    ];
+    $file_type = mime_content_type($tmp_name);
+    if (isset($mime_extension_map[$file_type])) {
+      $file_extension = $mime_extension_map[$file_type];
+      $new_name = uniqid('img_').'.'.$file_extension;
+      $item['IMAGE_URL'] = 'img/'.$new_name;
+      return ['TMP_NAME' => $tmp_name, 'NEW_NAME' => $new_name];
+    } else {
+      $errors_arr['IMAGE_URL'] = 'Загрузите картинку в формате jpg, jpeg или png';
+    }
+  } elseif ($isRequired) {
+    $errors_arr['IMAGE_URL'] = 'Вы не загрузили картинку';
+  } else {
+    $item['IMAGE_URL'] = '';
+  }
+}
+
+//Функция приводит дату к человекопонятному виду
+function showDate($time) { // Определяем количество и тип единицы измерения
+  $time = time() - $time;
+  if ($time < 60) {
+    return 'меньше минуты назад';
+  } elseif ($time < 3600) {
+    return dimension((int)($time/60), 'i');
+  } elseif ($time < 86400) {
+    return dimension((int)($time/3600), 'G');
+  } elseif ($time < 2592000) {
+    return dimension((int)($time/86400), 'j');
+  } elseif ($time < 31104000) {
+    return dimension((int)($time/2592000), 'n');
+  } elseif ($time >= 31104000) {
+    return dimension((int)($time/31104000), 'Y');
+  }
+}
+function dimension($time, $type) { // Определяем склонение единицы измерения
+  $dimension = [
+    'n' => ['месяцев', 'месяц', 'месяца', 'месяц'],
+    'j' => ['дней', 'день', 'дня'],
+    'G' => ['часов', 'час', 'часа'],
+    'i' => ['минут', 'минуту', 'минуты'],
+    'Y' => ['лет', 'год', 'года']
+  ];
+    if ($time >= 5 && $time <= 20)
+        $n = 0;
+    else if ($time == 1 || $time % 10 == 1)
+        $n = 1;
+    else if (($time <= 4 && $time >= 1) || ($time % 10 <= 4 && $time % 10 >= 1))
+        $n = 2;
+    else
+        $n = 0;
+    return $time.' '.$dimension[$type][$n]. ' назад';
+}
