@@ -55,27 +55,21 @@ function checkForExistanceDBres(?array $checking_item) {
     die();
   }
 }
-// Функция отправляет запрос в БД и возвращает многомерный ассоциативный массив
-function get_DB_query_rows(string $query, $link): ?array {
-    $query_result = mysqli_query($link, $query);
-    if (!$query_result) {
-      $error = mysqli_error($link);
-      print("Ошибка в запросе $query: $error");
-      die();
-    }
+// Функция отправляет запрос в БД и возвращает многомерный или одномерный ассоциативный массив
+function get_DB_query_res(string $query, $link, bool $isMulti = true): ?array {
+  $query_result = mysqli_query($link, $query);
+  if (!$query_result) {
+    $error = mysqli_error($link);
+    print("Ошибка в запросе $query: $error");
+    die();
+  }
+  if ($isMulti) {
     $fetched_query_result = mysqli_fetch_all($query_result, MYSQLI_ASSOC);
     return $fetched_query_result;
-}
-// Функция отправляет запрос в БД и возвращает ассоциативный массив одного значения
-function get_DB_query_row(string $query, $link): ?array {
-    $query_result = mysqli_query($link, $query);
-     if (!$query_result) {
-      $error = mysqli_error($link);
-      print("Ошибка в запросе $query: $error");
-      die();
-    }
+  } else {
     $fetched_query_result = mysqli_fetch_assoc($query_result);
     return $fetched_query_result;
+  }   
 }
 // Функция отправляет запрос в БД и вставляет 1 значение в БД, возвращает ID вставленной записи
 function put_DB_query_row(string $query, $link): int {

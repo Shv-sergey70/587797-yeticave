@@ -12,7 +12,7 @@ if (!$USER) {
 }
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
-$menu_items = get_DB_query_rows($menu_items_query, $link);
+$menu_items = get_DB_query_res($menu_items_query, $link, true);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$lot = $_POST;

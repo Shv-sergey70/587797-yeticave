@@ -12,7 +12,7 @@ if ($USER) {
 
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
-$menu_items = get_DB_query_rows($menu_items_query, $link);
+$menu_items = get_DB_query_res($menu_items_query, $link, true);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
 	$login = $_POST;
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		//Запрос на получение пользователя по введенному EMAIL
 		$safe_EMAIL = mysqli_real_escape_string($link, $login['EMAIL']);
 		$email_query = "SELECT * FROM users WHERE email = '$safe_EMAIL'";
-		$user_from_db = get_DB_query_row($email_query, $link);
+		$user_from_db = get_DB_query_res($email_query, $link, false);
 		if (!$user_from_db) {
 			$errors['WRONG'] = 'Вы ввели неверный email/пароль';
 		} else if (!empty($login['PASSWORD'])) {
