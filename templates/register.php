@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="form__input-file">
-      <input class="visually-hidden" type="file" id="photo2" name='AVATAR' value='' accept='image/jpeg, image/png'>
+      <input class="visually-hidden" type="file" id="photo2" name='IMAGE_URL' value='' accept='image/jpeg, image/png'>
       <label for="photo2">
         <span>+ Добавить</span>
       </label>

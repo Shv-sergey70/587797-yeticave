@@ -12,7 +12,7 @@ $menu_items = get_DB_query_rows($menu_items_query, $link);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
 	$account = $_POST;
 	$required = ['EMAIL', 'PASSWORD', 'NAME', 'MESSAGE'];
-	$dict = ['EMAIL' => 'E-mail', 'PASSWORD' => 'Пароль', 'NAME' => 'Имя', 'MESSAGE' => 'Контактные данные', 'AVATAR' => 'Аватар'];
+	$dict = ['EMAIL' => 'E-mail', 'PASSWORD' => 'Пароль', 'NAME' => 'Имя', 'MESSAGE' => 'Контактные данные', 'IMAGE_URL' => 'Аватар'];
 	$errors = [];
 	foreach ($required as $value) {
 		if (empty($account[$value])) {
@@ -30,28 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 	}
 	
-	if (!count($errors)) { //Выполнить проверку, только если нет других ошибок (для исключения дублирования)
-		if (!empty($_FILES['AVATAR']['name'])) {
-			$tmp_name = $_FILES['AVATAR']['tmp_name'];
-			$original_name = $_FILES['AVATAR']['name'];
-			$mime_extension_map = [
-				'image/png' => 'png',
-				'image/jpeg' => 'jpeg',
-				'image/jpg' => 'jpg'
-			];
-			$file_type = mime_content_type($tmp_name);
-			if (isset($mime_extension_map[$file_type])) {
-				$file_extension = $mime_extension_map[$file_type];
-				$new_name = uniqid('img_').'.'.$file_extension;
-				move_uploaded_file($tmp_name, 'img/'.$new_name);
-				$account['AVATAR'] = 'img/'.$new_name;
-			} else {
-				$errors['AVATAR'] = 'Загрузите картинку в формате jpg, jpeg или png';
-			}
-		} else {
-			$account['AVATAR'] = '';
-		}
-	}
+	//Проверка изображения
+	$file_arr = checkUserImageFromForm($_FILES['IMAGE_URL'], $account, $errors, false);
 
 	if (count($errors)) {
 		$page_content = include_template('register.php', 
@@ -62,11 +42,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	    'account' => $account
 	  ]);
 	} else {
+		//Проверяю $mime_extension_map[$file_type], тк если эта переменная не пуста, значит и файл существует
+		if (!empty($file_arr)) {
+			move_uploaded_file($file_arr['TMP_NAME'], 'img/'.$file_arr['NEW_NAME']);//Перемещаем картинку, загруженную юзером
+		}
 		//Запрос на добавление нового пользователя
 		$safe_NAME = mysqli_real_escape_string($link, $account['NAME']);
-		$PASSWORD_HASH = mysqli_real_escape_string(password_hash($account['PASSWORD'], PASSWORD_DEFAULT));
+		$PASSWORD_HASH = mysqli_real_escape_string($link, password_hash($account['PASSWORD'], PASSWORD_DEFAULT));
 		$safe_MESSAGE = mysqli_real_escape_string($link, $account['MESSAGE']);
-		$safe_AVATAR = $account['AVATAR']; //тк мы его генерируем сами, не подвергаем экранированию
+		$safe_AVATAR = $account['IMAGE_URL']; //тк мы его генерируем сами, не подвергаем экранированию
 
 		$user_add_query = "INSERT INTO users
 											SET

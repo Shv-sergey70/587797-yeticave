@@ -43,7 +43,7 @@
             <tr class="history__item">
               <td class="history__name"><?=htmlspecialchars($value['USER_NAME'], ENT_QUOTES)?></td>
               <td class="history__price"><?=toPriceFormat($value['PRICE'])?></td>
-              <td class="history__time"><?=$value['DATE_CREATE']?></td>
+              <td class="history__time"><?=showDate(strtotime($value['DATE_CREATE']))?></td>
             </tr>
           <?endforeach;?>
         </table>
