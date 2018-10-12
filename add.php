@@ -52,26 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$errors['CATEGORY'] = 'Выберите категорию из списка';
 		}
 	}
+
 	//Проверка изображения
-	if (!empty($_FILES['IMAGE_URL']['name'])) {
-		$tmp_name = $_FILES['IMAGE_URL']['tmp_name'];
-		$mime_extension_map = [
-			'image/png' => 'png',
-			'image/jpeg' => 'jpeg',
-			'image/jpg' => 'jpg'
-		];
-		$file_type = mime_content_type($tmp_name);
-		if (isset($mime_extension_map[$file_type])) {
-			$file_extension = $mime_extension_map[$file_type];
-			$new_name = uniqid('img_').'.'.$file_extension;
-			move_uploaded_file($tmp_name, 'img/'.$new_name);
-			$lot['IMAGE_URL'] = 'img/'.$new_name;
-		} else {
-			$errors['IMAGE_URL'] = 'Загрузите картинку в формате jpg, jpeg или png';
-		}
-	} else {
-		$errors['IMAGE_URL'] = 'Вы не загрузили картинку';
-	}
+  $file_arr = checkUserImageFromForm($_FILES['IMAGE_URL'], $lot, $errors, true);
 
 	if (count($errors)) {
 		$page_content = include_template('add.php', 
@@ -82,25 +65,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	    'lot' => $lot
 	  ]);
 	} else {
+		move_uploaded_file($file_arr['TMP_NAME'], 'img/'.$file_arr['NEW_NAME']); //Перемещаем файл, загруженный юзером
 		//Запрос на добавление нового лота
-		//Тк пока не других юзеров, и соответственно их ID - поставил цифру 1
 		$safe_NAME = mysqli_real_escape_string($link, $lot['NAME']);
 		$safe_DESCRIPTION = mysqli_real_escape_string($link, $lot['DESCRIPTION']);
 		$safe_IMAGE_URL = mysqli_real_escape_string($link, $lot['IMAGE_URL']);
 		$safe_START_PRICE = intval($lot['START_PRICE']);
 		$safe_FINISH_DATE = mysqli_real_escape_string($link, $date_for_insert);
 		$safe_PRICE_STEP = intval($lot['PRICE_STEP']);
+		$user_id = $_SESSION['USER']['id'];
 
 		$lot_add_query = "INSERT INTO lots
 											SET
 											date_create = NOW(),
-											name = '".$safe_NAME."',
-											description = '".$safe_DESCRIPTION."',
-											image_url = '".$safe_IMAGE_URL."',
-											start_price = '".$safe_START_PRICE."',
-											date_end = '".$safe_FINISH_DATE."',
-											bet_step = '".$safe_PRICE_STEP."',
-											author_id = 1,
+											name = '$safe_NAME',
+											description = '$safe_DESCRIPTION',
+											image_url = '$safe_IMAGE_URL',
+											start_price = '$safe_START_PRICE',
+											date_end = '$safe_FINISH_DATE',
+											bet_step = '$safe_PRICE_STEP',
+											author_id = '$user_id',
 											adv_category_id = ".$safe_CATEGORY_ID;
 		$inserted_lot_id = put_DB_query_row($lot_add_query, $link);
 		header('Location: lot.php?ID='.$inserted_lot_id);

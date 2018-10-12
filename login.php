@@ -4,6 +4,10 @@ require_once('const.php');
 $link = require_once('db_conn.php');
 session_start();
 $USER = isset($_SESSION['USER'])?$_SESSION['USER']:NULL;
+if ($USER) {
+	header('Location: '.MAIN_DIR);
+	die();
+}
 
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
@@ -61,6 +65,6 @@ $layout_content = include_template('layout.php',
     'content' => $page_content, 
     'menu_items' => $menu_items, 
     'title' => 'Yeticave',
-    'USER'=> $USER
+    'USER'=> NULL
   ]);
 print($layout_content);
