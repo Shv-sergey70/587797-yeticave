@@ -32,7 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 	
 	//Проверка изображения
-	$file_arr = checkUserImageFromForm($_FILES['IMAGE_URL'], $account, $errors, false);
+	$file_arr = checkUserImageFromForm($_FILES, 'IMAGE_URL', false);
+	if ($file_arr['ERROR']) {
+  	$errors['IMAGE_URL'] = $file_arr['ERROR'];
+  }
 
 	if (count($errors)) {
 		$page_content = include_template('register.php', 
@@ -44,14 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	  ]);
 	} else {
 		//Проверяю $mime_extension_map[$file_type], тк если эта переменная не пуста, значит и файл существует
-		if (!empty($file_arr)) {
+		if (!empty($file_arr['URL'])) {
 			move_uploaded_file($file_arr['TMP_NAME'], 'img/'.$file_arr['NEW_NAME']);//Перемещаем картинку, загруженную юзером
 		}
 		//Запрос на добавление нового пользователя
 		$safe_NAME = mysqli_real_escape_string($link, $account['NAME']);
 		$PASSWORD_HASH = mysqli_real_escape_string($link, password_hash($account['PASSWORD'], PASSWORD_DEFAULT));
 		$safe_MESSAGE = mysqli_real_escape_string($link, $account['MESSAGE']);
-		$safe_AVATAR = $account['IMAGE_URL']; //тк мы его генерируем сами, не подвергаем экранированию
+		$safe_AVATAR = $file_arr['URL']; //тк мы его генерируем сами, не подвергаем экранированию
 
 		$user_add_query = "INSERT INTO users
 											SET

@@ -82,9 +82,9 @@ function put_DB_query_row(string $query, $link): int {
     return mysqli_insert_id($link);
 }
 //Функция проверяет картинку, загруженную юзером, на соответствие типу
-function checkUserImageFromForm($file, &$item, &$errors_arr, $isRequired = true) {
-  if (!empty($file['name'])) {
-    $tmp_name = $file['tmp_name'];
+function checkUserImageFromForm(array $file, string $input_name, bool $isRequired = true): array {
+  if (!empty($file[$input_name]['name'])) {
+    $tmp_name = $file[$input_name]['tmp_name'];
     $mime_extension_map = [
       'image/png' => 'png',
       'image/jpeg' => 'jpeg',
@@ -94,15 +94,14 @@ function checkUserImageFromForm($file, &$item, &$errors_arr, $isRequired = true)
     if (isset($mime_extension_map[$file_type])) {
       $file_extension = $mime_extension_map[$file_type];
       $new_name = uniqid('img_').'.'.$file_extension;
-      $item['IMAGE_URL'] = 'img/'.$new_name;
-      return ['TMP_NAME' => $tmp_name, 'NEW_NAME' => $new_name];
+      return ['URL' => 'img/'.$new_name, 'TMP_NAME' => $tmp_name, 'NEW_NAME' => $new_name, 'ERROR' => NULL];
     } else {
-      $errors_arr['IMAGE_URL'] = 'Загрузите картинку в формате jpg, jpeg или png';
+      return ['ERROR' => 'Загрузите картинку в формате jpg, jpeg или png'];
     }
   } elseif ($isRequired) {
-    $errors_arr['IMAGE_URL'] = 'Вы не загрузили картинку';
+    return ['ERROR' => 'Вы не загрузили картинку'];
   } else {
-    $item['IMAGE_URL'] = '';
+    return ['URL' => '', 'ERROR' => NULL];
   }
 }
 
