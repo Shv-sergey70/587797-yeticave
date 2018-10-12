@@ -2,8 +2,13 @@
 require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
-$user = require_once('user.php');
-
+session_start();
+$USER = isset($_SESSION['USER'])?$_SESSION['USER']:NULL;
+//Ограничен доступ не анонимных пользователей
+if (!$USER) {
+	header('HTTP/1.x 403');
+	die();
+}
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
 $menu_items = get_DB_query_rows($menu_items_query, $link);
@@ -50,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	//Проверка изображения
 	if (!empty($_FILES['IMAGE_URL']['name'])) {
 		$tmp_name = $_FILES['IMAGE_URL']['tmp_name'];
-		$original_name = $_FILES['IMAGE_URL']['name'];
 		$mime_extension_map = [
 			'image/png' => 'png',
 			'image/jpeg' => 'jpeg',
@@ -115,6 +119,6 @@ $layout_content = include_template('layout.php',
     'content' => $page_content, 
     'menu_items' => $menu_items, 
     'title' => 'Yeticave', 
-    'user'=>$user
+    'USER'=> $USER
   ]);
 print($layout_content);
