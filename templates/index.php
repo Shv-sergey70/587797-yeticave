@@ -1,3 +1,4 @@
+<?php declare(strict_types=1);?>
 <section class="promo">
     <h2 class="promo__title">Нужен стафф для катки?</h2>
     <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
@@ -27,7 +28,7 @@
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=toPriceFormat($value['lot_start_price'])?></span>
+                            <span class="lot__cost"><?=toPriceFormat((int)$value['lot_start_price'])?></span>
                         </div>
                         <div class="lot__timer timer">
                           <?=getTimeToMidnight()?>

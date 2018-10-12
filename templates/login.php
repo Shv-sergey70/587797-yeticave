@@ -1,3 +1,4 @@
+<?php declare(strict_types=1);?>
 <?=include_template('_main_menu.php', ['menu_items' => $menu_items]); //Подключение меню?>
 <form class="form container <?=!empty($errors)?'form--invalid':''?>" method="POST">
   <h2>Вход</h2>

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
@@ -11,7 +12,7 @@ if (!$USER) {
 }
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
-$menu_items = get_DB_query_rows($menu_items_query, $link);
+$menu_items = get_DB_query_res($menu_items_query, $link, true);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$lot = $_POST;
@@ -54,7 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 
 	//Проверка изображения
-  $file_arr = checkUserImageFromForm($_FILES['IMAGE_URL'], $lot, $errors, true);
+  $file_arr = checkUserImageFromForm($_FILES, 'IMAGE_URL', true);
+  if ($file_arr['ERROR']) {
+  	$errors['IMAGE_URL'] = $file_arr['ERROR'];
+  }
 
 	if (count($errors)) {
 		$page_content = include_template('add.php', 
@@ -69,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		//Запрос на добавление нового лота
 		$safe_NAME = mysqli_real_escape_string($link, $lot['NAME']);
 		$safe_DESCRIPTION = mysqli_real_escape_string($link, $lot['DESCRIPTION']);
-		$safe_IMAGE_URL = mysqli_real_escape_string($link, $lot['IMAGE_URL']);
+		$safe_IMAGE_URL = mysqli_real_escape_string($link, $file_arr['URL']);
 		$safe_START_PRICE = intval($lot['START_PRICE']);
 		$safe_FINISH_DATE = mysqli_real_escape_string($link, $date_for_insert);
 		$safe_PRICE_STEP = intval($lot['PRICE_STEP']);
