@@ -1,4 +1,5 @@
-<?php
+<?php 
+declare(strict_types=1);
 require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');

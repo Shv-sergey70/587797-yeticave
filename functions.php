@@ -1,7 +1,8 @@
-<?php
+<?php 
+declare(strict_types=1);
 date_default_timezone_set('Europe/Moscow');
 //Функция-шаблонизатор
-function include_template($name, $data) {
+function include_template(string $name, array $data): string {
     $name = 'templates/' . $name;
     $result = '';
 
@@ -18,7 +19,7 @@ function include_template($name, $data) {
     return $result;
 }
 //Создадим функцию module2-task2
-function toPriceFormat($num) {
+function toPriceFormat(int $num): string {
   $number = ceil($num);
   if ($number >= 1000) {
       $number = number_format($number, 0, '.', ' ');
@@ -26,37 +27,36 @@ function toPriceFormat($num) {
   return $number.' &#8381;';
 }
 //Функция для определения времени до полуночи - module3-task2
-function getTimeToMidnight() {
+function getTimeToMidnight(): string {
 	$second_to_midnight = strtotime('tomorrow') - time();
-    $minutes_to_midnight = add0ToDate(floor(($second_to_midnight/60)%60));
-    $hours_to_midnight = add0ToDate(floor($second_to_midnight/3600));
+    $minutes_to_midnight = add0ToDate((string)floor(($second_to_midnight/60)%60));
+    $hours_to_midnight = add0ToDate((string)floor($second_to_midnight/3600));
 	return $hours_to_midnight.':'.$minutes_to_midnight;
 }
 //Функция добавляет 0, если минут или часов меньше 10
-function add0ToDate($value) {
-	if ($value < 10) {
+function add0ToDate(string $value): string {
+	if ((int)$value < 10) {
 		$value = '0'.$value;
 	}
 	return $value;
 }
 //Функция для определения разницы времени между определенным моментов и настоящим
-function getTimeDiff($future_time) {
+function getTimeDiff(string $future_time): string {
     $seconds_diff = strtotime($future_time) - time();
-    $seconds_to = add0ToDate(floor(($seconds_diff)%60));
-    $minutes_to = add0ToDate(floor(($seconds_diff/60)%60));
-    $hours_to = add0ToDate(floor($seconds_diff/3600));
+    $seconds_to = add0ToDate((string)floor(($seconds_diff)%60));
+    $minutes_to = add0ToDate((string)floor(($seconds_diff/60)%60));
+    $hours_to = add0ToDate((string)floor($seconds_diff/3600));
     return $hours_to.':'.$minutes_to.':'.$seconds_to;
 }
 // Функция проверяет на существование результат запроса - если нет - отправляет 404
-function checkForExistanceDBres($checking_item)
-{
+function checkForExistanceDBres(?array $checking_item) {
   if (empty($checking_item)) {
     header("HTTP/1.x 404 Not Found");
     die();
   }
 }
 // Функция отправляет запрос в БД и возвращает многомерный ассоциативный массив
-function get_DB_query_rows($query, $link) {
+function get_DB_query_rows(string $query, $link): ?array {
     $query_result = mysqli_query($link, $query);
     if (!$query_result) {
       $error = mysqli_error($link);
@@ -67,7 +67,7 @@ function get_DB_query_rows($query, $link) {
     return $fetched_query_result;
 }
 // Функция отправляет запрос в БД и возвращает ассоциативный массив одного значения
-function get_DB_query_row($query, $link) {
+function get_DB_query_row(string $query, $link): ?array {
     $query_result = mysqli_query($link, $query);
      if (!$query_result) {
       $error = mysqli_error($link);
@@ -78,7 +78,7 @@ function get_DB_query_row($query, $link) {
     return $fetched_query_result;
 }
 // Функция отправляет запрос в БД и вставляет 1 значение в БД, возвращает ID вставленной записи
-function put_DB_query_row($query, $link) {
+function put_DB_query_row(string $query, $link): int {
     $query_result = mysqli_query($link, $query);
      if (!$query_result) {
       $error = mysqli_error($link);
@@ -113,7 +113,7 @@ function checkUserImageFromForm($file, &$item, &$errors_arr, $isRequired = true)
 }
 
 //Функция приводит дату к человекопонятному виду
-function showDate($time) { // Определяем количество и тип единицы измерения
+function showDate(int $time): string { // Определяем количество и тип единицы измерения
   $time = time() - $time;
   if ($time < 60) {
     return 'меньше минуты назад';
@@ -129,7 +129,7 @@ function showDate($time) { // Определяем количество и ти�
     return dimension((int)($time/31104000), 'Y');
   }
 }
-function dimension($time, $type) { // Определяем склонение единицы измерения
+function dimension(int $time, string $type): string { // Определяем склонение единицы измерения
   $dimension = [
     'n' => ['месяцев', 'месяц', 'месяца', 'месяц'],
     'j' => ['дней', 'день', 'дня'],
@@ -139,7 +139,7 @@ function dimension($time, $type) { // Определяем склонение е
   ];
     if ($time >= 5 && $time <= 20)
         $n = 0;
-    else if ($time == 1 || $time % 10 == 1)
+    else if ($time === 1 || $time % 10 === 1)
         $n = 1;
     else if (($time <= 4 && $time >= 1) || ($time % 10 <= 4 && $time % 10 >= 1))
         $n = 2;

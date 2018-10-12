@@ -1,3 +1,4 @@
+<?php declare(strict_types=1);?>
 <nav class="nav">
   <ul class="nav__list container">
     <?foreach ($menu_items as $value):?>
