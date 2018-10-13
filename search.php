@@ -22,8 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
 	} else {
 		
 		$safe_search_query = mysqli_real_escape_string($link, $search_query);
-		$items_in_page = 9; //Количество элементов на страницу
-		$cur_page = intval($_GET['page'] ?? 1); //Определение текущей страницы
 
 		//Запрос в БД по поисковой фразе, для получения количества лотов
 		$searching_cnt_query = "SELECT
@@ -34,19 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
 														AND lots.date_end > CURDATE()";
 		$items_count = (int)get_DB_query_res($searching_cnt_query, $link, false)['CNT']; //Количество элементов
 
-		$pages_count = (int)ceil($items_count/$items_in_page); //Считаем количество страниц
-		$offset = ($cur_page - 1) * $items_in_page; //Смещение для запроса к БД
-		$pages = range(1, $pages_count); //Массив страниц для пагинации
-		if ($cur_page > 1) {
-			$prev_page = $cur_page - 1;
-		} elseif ($cur_page === 1) {
-			$prev_page = $cur_page;
-		}
-		if ($cur_page < $pages_count) {
-			$next_page = $cur_page + 1;
-		} elseif ($cur_page === $pages_count) {
-			$next_page = $cur_page;
-		}
+		$pagination = createPagination(intval($_GET['page'] ?? 1), $items_count, 9); //Создаем пагинацию
 
 		//Запрос в БД по поисковой фразе
 		$searching_query = "SELECT 
@@ -69,8 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
 												AND lots.date_end > CURDATE()
 												GROUP BY bets.lot_id, lots.id
 												ORDER BY lots.date_create ASC
-												LIMIT $items_in_page
-												OFFSET $offset";
+												LIMIT ".$pagination['ELEMENT_PER_PAGE']."
+												OFFSET ".$pagination['OFFSET'];
 		$search_result = get_DB_query_res($searching_query, $link, true);
 
 		foreach ($search_result as $key => $value) {
@@ -86,11 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
 	    'menu_items' => $menu_items,
 	    'search_result' => $search_result,
 	    'search_query' => $search_query,
-	    'pages_count' => $pages_count,
-	    'cur_page' => $cur_page,
-	    'pages' => $pages,
-	    'prev_page' => $prev_page ?? NULL,
-	    'next_page' => $next_page ?? NULL
+	    'pagination' => $pagination
 	  ]);
 	}
 } else {

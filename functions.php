@@ -145,3 +145,20 @@ function plural_form(int $number, array $after): string {
   $cases = array (2, 0, 1, 1, 1, 2);
   return $number.' '.$after[ ($number%100>4 && $number%100<20)? 2: $cases[min($number%10, 5)] ];
 }
+//Функция для пагинации
+function createPagination(int $cur_page, int $elements_count, int $element_per_page): array {
+  $pages_count = (int)ceil($elements_count/$element_per_page); //Считаем количество страниц
+  $offset = ($cur_page - 1) * $element_per_page; //Смещение для запроса к БД
+  $pages = range(1, $pages_count); //Массив страниц для пагинации
+  if ($cur_page > 1) {
+    $prev_page = $cur_page - 1;
+  } else {
+    $prev_page = $cur_page;
+  }
+  if ($cur_page < $pages_count) {
+    $next_page = $cur_page + 1;
+  } else {
+    $next_page = $cur_page;
+  }
+  return ['PREV_PAGE' => $prev_page, 'NEXT_PAGE' => $next_page, 'OFFSET' => $offset, 'PAGES_COUNT' => $pages_count, 'PAGES' => $pages, 'CURRENT_PAGE' => $cur_page, 'ELEMENT_PER_PAGE' => $element_per_page];
+}

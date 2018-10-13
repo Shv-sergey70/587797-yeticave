@@ -17,7 +17,7 @@
           </div>
           <div class="lot__info">
             <span class="lot__category"><?=htmlspecialchars($value['CATEGORY_NAME'], ENT_QUOTES)?></span>
-            <h3 class="lot__title"><a class="text-link" href="lot.html"><?=htmlspecialchars($value['NAME'], ENT_QUOTES)?></a></h3>
+            <h3 class="lot__title"><a class="text-link" href="lot.php?ID=<?=$value['ID']?>"><?=htmlspecialchars($value['NAME'], ENT_QUOTES)?></a></h3>
             <div class="lot__state">
               <div class="lot__rate">
                 <span class="lot__amount"><?=(!empty($value['BETS_COUNT']))?plural_form((int)$value['BETS_COUNT'], ['ставка', 'ставки', 'ставок']):'Стартовая цена'?></span>
@@ -32,11 +32,11 @@
         <?php endforeach;?>
       <?php endif;?>
   </section>
-    <?php if(isset($pages_count) && $pages_count > 1):?>
+    <?php if(isset($pagination['PAGES_COUNT']) && $pagination['PAGES_COUNT'] > 1):?>
       <ul class="pagination-list">
-        <li class="pagination-item pagination-item-prev"><a href='search.php?search=<?=$search_query."&page=$prev_page"?>'>Назад</a></li>
-        <?php foreach($pages as $value):?>
-          <?php if($value === $cur_page):?>
+        <li class="pagination-item pagination-item-prev"><a href="<?='search.php?search='.$search_query.'&page='.$pagination['PREV_PAGE']?>">Назад</a></li>
+        <?php foreach($pagination['PAGES'] as $value):?>
+          <?php if($value === $pagination['CURRENT_PAGE']):?>
             <li class="pagination-item pagination-item-active">
               <a><?=$value?></a>
             </li>
@@ -46,7 +46,7 @@
             </li>
           <?php endif;?>
         <?php endforeach;?>
-        <li class="pagination-item pagination-item-next"><a href='search.php?search=<?=$search_query."&page=$next_page"?>'>Вперед</a></li>
+        <li class="pagination-item pagination-item-next"><a href="<?='search.php?search='.$search_query.'&page='.$pagination['NEXT_PAGE']?>">Вперед</a></li>
       </ul>
     <?php endif;?>
   <?php endif;?>
