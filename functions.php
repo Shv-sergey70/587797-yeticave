@@ -140,3 +140,8 @@ function dimension(int $time, string $type): string { // Определяем с
         $n = 0;
     return $time.' '.$dimension[$type][$n]. ' назад';
 }
+//Функция для склонения слов
+function plural_form(int $number, array $after): string {
+  $cases = array (2, 0, 1, 1, 1, 2);
+  return $number.' '.$after[ ($number%100>4 && $number%100<20)? 2: $cases[min($number%10, 5)] ];
+}
