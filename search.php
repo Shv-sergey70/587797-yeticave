@@ -83,11 +83,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
   ]);
 }
 
-
 $layout_content = include_template('layout.php', 
   [
     'content' => $page_content, 
     'menu_items' => $menu_items, 
+    'search_query' => $search_query??'',
     'title' => 'Yeticave', 
     'USER'=> $USER
   ]);

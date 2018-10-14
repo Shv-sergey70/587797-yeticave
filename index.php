@@ -44,6 +44,7 @@ $layout_content = include_template('layout.php',
   [
     'content' => $page_content, 
     'menu_items' => $menu_items, 
+    'search_query' => $_GET['search']??'',
     'title' => 'Yeticave', 
     'USER'=> $USER
   ]);
