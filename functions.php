@@ -162,3 +162,10 @@ function createPagination(int $cur_page, int $elements_count, int $element_per_p
   }
   return ['PREV_PAGE' => $prev_page, 'NEXT_PAGE' => $next_page, 'OFFSET' => $offset, 'PAGES_COUNT' => $pages_count, 'PAGES' => $pages, 'CURRENT_PAGE' => $cur_page, 'ELEMENT_PER_PAGE' => $element_per_page];
 }
+//Функция проверяет аутентифицирован ли пользователь
+function isAuth($user) {
+  if (!$user) {
+    header('HTTP/1.x 403');
+    die();
+  }
+}
