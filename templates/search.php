@@ -7,7 +7,7 @@
     <?php elseif(!count($search_result)):?>
       <h2>Ничего не найдено по вашему запросу</h2>
     <?php else:?>
-      <h2>Результаты поиска по запросу «<span><?=htmlspecialchars($search_query)?></span>»</h2>
+      <h2>Результаты поиска по запросу «<span><?=htmlspecialchars($search_query, ENT_QUOTES)?></span>»</h2>
     <ul class="lots__list">
       <?php if(count($search_result)):?>
         <?php foreach ($search_result as $value):?>
@@ -34,7 +34,7 @@
   </section>
     <?php if(isset($pagination['PAGES_COUNT']) && $pagination['PAGES_COUNT'] > 1):?>
       <ul class="pagination-list">
-        <li class="pagination-item pagination-item-prev"><a href="<?='search.php?search='.htmlspecialchars($search_query).'&page='.$pagination['PREV_PAGE']?>">Назад</a></li>
+        <li class="pagination-item pagination-item-prev"><a href="<?='search.php?search='.htmlspecialchars($search_query, ENT_QUOTES).'&page='.$pagination['PREV_PAGE']?>">Назад</a></li>
         <?php foreach($pagination['PAGES'] as $value):?>
           <?php if($value === $pagination['CURRENT_PAGE']):?>
             <li class="pagination-item pagination-item-active">
@@ -42,11 +42,11 @@
             </li>
           <?php else:?>
             <li class="pagination-item">
-              <a href="search.php?search=<?=htmlspecialchars($search_query)?>&page=<?=$value?>"><?=$value?></a>
+              <a href="search.php?search=<?=htmlspecialchars($search_query, ENT_QUOTES)?>&page=<?=$value?>"><?=$value?></a>
             </li>
           <?php endif;?>
         <?php endforeach;?>
-        <li class="pagination-item pagination-item-next"><a href="<?='search.php?search='.htmlspecialchars($search_query).'&page='.$pagination['NEXT_PAGE']?>">Вперед</a></li>
+        <li class="pagination-item pagination-item-next"><a href="<?='search.php?search='.htmlspecialchars($search_query, ENT_QUOTES).'&page='.$pagination['NEXT_PAGE']?>">Вперед</a></li>
       </ul>
     <?php endif;?>
   <?php endif;?>
