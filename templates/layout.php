@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="page-wrapper">
-    
+  
 <header class="main-header">
     <div class="main-header__container container">
         <h1 class="visually-hidden">YetiCave</h1>
@@ -17,7 +17,7 @@
             <img src="img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
         </a>
         <form class="main-header__search" action='search.php' method="GET">
-            <input type="search" name="search" placeholder="Поиск лота" value="<?=$_GET['search']??''?>">
+            <input type="search" name="search" placeholder="Поиск лота" value="<?=htmlspecialchars($search_query, ENT_QUOTES)?>">
             <input class="main-header__search-btn" type="submit" value="Найти">
         </form>
         <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
