@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
 												WHERE MATCH(lots.name, lots.description)
 												AGAINST('$safe_search_query.*' IN BOOLEAN MODE) 
 												AND lots.date_end > CURDATE()
-												GROUP BY bets.lot_id, lots.id
+												GROUP BY lots.id
 												ORDER BY lots.date_create ASC
 												LIMIT ".$pagination['ELEMENT_PER_PAGE']."
 												OFFSET ".$pagination['OFFSET'];

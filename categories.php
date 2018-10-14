@@ -57,7 +57,7 @@ $items_query = "SELECT
 										WHERE 
 										lots.date_end > CURDATE()
 										AND categories.id = $category_id
-										GROUP BY bets.lot_id, lots.id
+										GROUP BY lots.id
 										ORDER BY lots.date_create ASC
 										LIMIT ".$pagination['ELEMENT_PER_PAGE']."
 										OFFSET ".$pagination['OFFSET'];
