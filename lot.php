@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once('functions.php');
 require_once('const.php');
 $link = require_once('db_conn.php');
@@ -13,7 +14,7 @@ $lot_id = intval($_GET['ID']);
 
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
-$menu_items = get_DB_query_rows($menu_items_query, $link);
+$menu_items = get_DB_query_res($menu_items_query, $link, true);
 
 //Запрос на получение лота
 $lot_query = 'SELECT 
@@ -35,7 +36,7 @@ $lot_query = 'SELECT
 							WHERE
               lots.date_end > CURDATE() AND lots.id = '.$lot_id.'
               GROUP BY bets.lot_id';
-$lot_item = get_DB_query_row($lot_query, $link);
+$lot_item = get_DB_query_res($lot_query, $link, false);
 checkForExistanceDBres($lot_item);
 //Определим минимальную ставку
 $lot_item['MIN_BET'] = $lot_item['PRICE']+$lot_item['PRICE_STEP'];
@@ -53,7 +54,7 @@ $bets_query = 'SELECT
               ON bets.user_id = users.id
               WHERE bets.lot_id = '.$lot_id.'
               ORDER BY bets.date_create DESC';
-$bets_list = get_DB_query_rows($bets_query, $link);
+$bets_list = get_DB_query_res($bets_query, $link, true);
 
 //Определение доступа к добавлению ставки
 $can_create_bet = true;

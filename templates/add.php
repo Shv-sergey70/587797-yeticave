@@ -1,3 +1,4 @@
+<?php declare(strict_types=1);?>
 <?=include_template('_main_menu.php', ['menu_items' => $menu_items]); //Подключение меню?>
 <form class="form form--add-lot container form--invalid" action="add.php" method="POST" enctype="multipart/form-data">
   <h2>Добавление лота</h2>

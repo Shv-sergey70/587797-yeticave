@@ -1,3 +1,4 @@
+<?php declare(strict_types=1);?>
 <?=include_template('_main_menu.php', ['menu_items' => $menu_items]); //Подключение меню?>
 <form class="form container <?=!empty($errors)?'form--invalid':''?>" method="POST" enctype="multipart/form-data"> <!-- form--invalid -->
   <h2>Регистрация нового аккаунта</h2>
