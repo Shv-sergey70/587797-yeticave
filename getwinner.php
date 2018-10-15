@@ -15,12 +15,24 @@ $lots_winner_query = "SELECT
 										lots.date_end <= CURDATE() AND
 										lots.winner_id IS NULL
 										GROUP BY bets.lot_id";
+$lots_winner_query = "SELECT
+			              MAX(bets.price) as MAX_PRICE,
+			              bets.user_id as USER_ID
+										FROM bets
+										WHERE bets.lot_id = 1";
 $lots_winner_result = get_DB_query_res($lots_winner_query, $link, true);
+// SELECT
+// 			              bets.price as MAX_PRICE,
+// 			              bets.user_id as USER_ID
+// 										FROM bets
+// 										WHERE bets.lot_id = 1
+//                                         ORDER BY bets.price DESC
+//                                         LIMIT 1
 
-// echo "<pre>";
-//   var_dump($lots_winner_result);
-// echo "</pre>";
-// die();
+echo "<pre>";
+  var_dump($lots_winner_result);
+echo "</pre>";
+die();
 $email = include_template('email.php', 
   [
     // 'USER'=> $USER

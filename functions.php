@@ -64,11 +64,11 @@ function getTimeDiff(string $future_time): string {
 }
 /**
   * Проверяет на существование результат запроса - если нет - отправляет 404
-  * @param array $checking_item  Результат запроса к БД
+  * @param array|NULL $checking_item  Результат запроса к БД
   *
   * @return void
   */
-function checkForExistanceDBres(?array $checking_item) {
+function checkForExistanceDBres(?array $checking_item): void {
   if (empty($checking_item)) {
     header("HTTP/1.x 404 Not Found");
     die();
@@ -77,12 +77,12 @@ function checkForExistanceDBres(?array $checking_item) {
 /**
   * Отправляет запрос в БД и возвращает многомерный или одномерный ассоциативный массив
   * @param string $query  Запрос для БД
-  * @param object $link Ресурс соединения с БД
+  * @param mysqli $link Ресурс соединения с БД
   * @param bool $isMulti Возвращать многомерный(true) или одномерный(false) ассоциативный массив
   *
   * @return array Результат запроса к БД в виде ассоциативного массива
   */
-function get_DB_query_res(string $query, $link, bool $isMulti = true): ?array {
+function get_DB_query_res(string $query, mysqli $link, bool $isMulti = true): ?array {
   $query_result = mysqli_query($link, $query);
   if (!$query_result) {
     $error = mysqli_error($link);
@@ -100,11 +100,11 @@ function get_DB_query_res(string $query, $link, bool $isMulti = true): ?array {
 /**
   * Отправляет запрос в БД и вставляет 1 значение в БД
   * @param string $query  Запрос для БД
-  * @param object $link Ресурс соединения с БД
+  * @param mysqli $link Ресурс соединения с БД
   *
   * @return int ID вставленной записи
   */
-function put_DB_query_row(string $query, $link): int {
+function put_DB_query_row(string $query, mysqli $link): int {
     $query_result = mysqli_query($link, $query);
      if (!$query_result) {
       $error = mysqli_error($link);
