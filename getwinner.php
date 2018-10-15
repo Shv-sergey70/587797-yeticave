@@ -66,7 +66,7 @@ if (!empty($lot_info)) {
 		// Create a message
 		$message = (new Swift_Message('Ваша ставка победила'))
 		  ->setFrom(['keks@phpdemo.ru' => 'Интернет Аукцион "YetiCave"'])
-		  ->setTo(['shv.sergey70@gmail.com', $value['USER_EMAIL']])
+		  ->setTo([$value['USER_EMAIL']])
 		  ->setBody($email, 'text/html')
 		  ;
 		// Send the message
