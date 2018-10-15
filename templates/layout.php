@@ -21,15 +21,15 @@
             <input class="main-header__search-btn" type="submit" value="Найти">
         </form>
         <a class="main-header__add-lot button" href="/add.php">Добавить лот</a>
-
         <nav class="user-menu">
-
         <?php if ($USER): ?>
           <div class="user-menu__image">
             <img src='<?=(!empty($USER['avatar_url']))?$USER['avatar_url']:'img/user.jpg'?>' width="40" height="40" alt="Пользователь">
           </div>
           <div class="user-menu__logged">
-            <p><?=htmlspecialchars($USER['name'])?></p>
+            <a href="/my_bets.php">
+              <p><?=htmlspecialchars($USER['name'])?></p>
+            </a>
             <a href="/logout.php">Выйти</a>
           </div>
         <?php else: ?>
