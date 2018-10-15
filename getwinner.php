@@ -70,6 +70,6 @@ if (!empty($lot_info)) {
 		  ->setBody($email, 'text/html')
 		  ;
 		// Send the message
-		$result = $mailer->send($message);
+		$mailer->send($message);
 	}
 }
