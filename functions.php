@@ -1,7 +1,13 @@
 <?php 
 declare(strict_types=1);
 date_default_timezone_set('Europe/Moscow');
-//Функция-шаблонизатор
+/**
+  * Функция-шаблонизатор
+  * @param string $name  Имя сценария-шаблона
+  * @param array $data  Массив с переменными, которые будут доступны в подключаемом шаблоне
+  *
+  * @return string Отрисованная страница из шаблона
+  */
 function include_template(string $name, array $data): string {
     $name = 'templates/' . $name;
     $result = '';
@@ -18,7 +24,12 @@ function include_template(string $name, array $data): string {
 
     return $result;
 }
-//Создадим функцию module2-task2
+/**
+  * Добавляет разрядность и знак рубля к числу
+  * @param int $num  Целое число для форматирования
+  *
+  * @return string Форматированное число со знаком рубля
+  */
 function toPriceFormat(int $num): string {
   $number = ceil($num);
   if ($number >= 1000) {
@@ -26,21 +37,24 @@ function toPriceFormat(int $num): string {
   }
   return $number.' &#8381;';
 }
-//Функция для определения времени до полуночи - module3-task2
-function getTimeToMidnight(): string {
-	$second_to_midnight = strtotime('tomorrow') - time();
-    $minutes_to_midnight = add0ToDate((string)floor(($second_to_midnight/60)%60));
-    $hours_to_midnight = add0ToDate((string)floor($second_to_midnight/3600));
-	return $hours_to_midnight.':'.$minutes_to_midnight;
-}
-//Функция добавляет 0, если минут или часов меньше 10
+/**
+  * Добавляет к числу 0 (ведущий ноль), если секунд, минут или часов меньше 10
+  * @param string $value  Число в виде строки для добавления ведущего нуля
+  *
+  * @return string Число в виде строки с добавленным ведущим нулем
+  */
 function add0ToDate(string $value): string {
 	if ((int)$value < 10) {
 		$value = '0'.$value;
 	}
 	return $value;
 }
-//Функция для определения разницы времени между определенным моментов и настоящим
+/**
+  * Определяет разницу времени между определенным моментом и настоящим
+  * @param string $future_time  Определенная дата
+  *
+  * @return string Дата в формате H:i:s
+  */
 function getTimeDiff(string $future_time): string {
     $seconds_diff = strtotime($future_time) - time();
     $seconds_to = add0ToDate((string)floor(($seconds_diff)%60));
@@ -48,15 +62,27 @@ function getTimeDiff(string $future_time): string {
     $hours_to = add0ToDate((string)floor($seconds_diff/3600));
     return $hours_to.':'.$minutes_to.':'.$seconds_to;
 }
-// Функция проверяет на существование результат запроса - если нет - отправляет 404
-function checkForExistanceDBres(?array $checking_item) {
+/**
+  * Проверяет на существование результат запроса - если нет - отправляет 404
+  * @param array|NULL $checking_item  Результат запроса к БД
+  *
+  * @return void
+  */
+function checkForExistanceDBres(?array $checking_item): void {
   if (empty($checking_item)) {
     header("HTTP/1.x 404 Not Found");
     die();
   }
 }
-// Функция отправляет запрос в БД и возвращает многомерный или одномерный ассоциативный массив
-function get_DB_query_res(string $query, $link, bool $isMulti = true): ?array {
+/**
+  * Отправляет запрос в БД и возвращает многомерный или одномерный ассоциативный массив
+  * @param string $query  Запрос для БД
+  * @param mysqli $link Ресурс соединения с БД
+  * @param bool $isMulti Возвращать многомерный(true) или одномерный(false) ассоциативный массив
+  *
+  * @return array Результат запроса к БД в виде ассоциативного массива
+  */
+function get_DB_query_res(string $query, mysqli $link, bool $isMulti = true): ?array {
   $query_result = mysqli_query($link, $query);
   if (!$query_result) {
     $error = mysqli_error($link);
@@ -71,8 +97,14 @@ function get_DB_query_res(string $query, $link, bool $isMulti = true): ?array {
     return $fetched_query_result;
   }   
 }
-// Функция отправляет запрос в БД и вставляет 1 значение в БД, возвращает ID вставленной записи
-function put_DB_query_row(string $query, $link): int {
+/**
+  * Отправляет запрос в БД и вставляет 1 значение в БД
+  * @param string $query  Запрос для БД
+  * @param mysqli $link Ресурс соединения с БД
+  *
+  * @return int ID вставленной записи
+  */
+function put_DB_query_row(string $query, mysqli $link): int {
     $query_result = mysqli_query($link, $query);
      if (!$query_result) {
       $error = mysqli_error($link);
@@ -81,7 +113,14 @@ function put_DB_query_row(string $query, $link): int {
     }
     return mysqli_insert_id($link);
 }
-//Функция проверяет картинку, загруженную юзером, на соответствие типу
+/**
+  * Проверяет картинку, загруженную юзером, на соответствие типу (png, jpeg, jpg)
+  * @param array $file  Массив с картинкой из глобальной переменной _FILES
+  * @param string $input_name Название поля загружаемой картинку
+  * @param bool $isRequired Является ли картинка обязательным полем
+  *
+  * @return array массив с ошибками и данными о картинке
+  */
 function checkUserImageFromForm(array $file, string $input_name, bool $isRequired = true): array {
   if (!empty($file[$input_name]['name'])) {
     $tmp_name = $file[$input_name]['tmp_name'];
@@ -104,8 +143,12 @@ function checkUserImageFromForm(array $file, string $input_name, bool $isRequire
     return ['URL' => '', 'ERROR' => NULL];
   }
 }
-
-//Функция приводит дату к человекопонятному виду
+/**
+  * Приводит дату к человекопонятному виду с правильным склоенением
+  * @param int $time Дата в unix-формате
+  *
+  * @return string Строка с датой в человекопонятном виде
+  */
 function showDate(int $time): string { // Определяем количество и тип единицы измерения
   $time = time() - $time;
   if ($time < 60) {
@@ -122,6 +165,13 @@ function showDate(int $time): string { // Определяем количест�
     return dimension((int)($time/31104000), 'Y');
   }
 }
+/**
+  * Приводит дату к человекопонятному виду
+  * @param int $time Дата в unix-формате
+  * @param string $type Определенная единица измерения (дни, месяцы...)
+  *
+  * @return string Дата с правильным склонением
+  */
 function dimension(int $time, string $type): string { // Определяем склонение единицы измерения
   $dimension = [
     'n' => ['месяцев', 'месяц', 'месяца', 'месяц'],
@@ -140,12 +190,25 @@ function dimension(int $time, string $type): string { // Определяем с
         $n = 0;
     return $time.' '.$dimension[$type][$n]. ' назад';
 }
-//Функция для склонения слов
+/**
+  * Склоняет слова
+  * @param int $number Количество элементов для склоенения
+  * @param array $after Фразы в разных вариациях для склонения
+  *
+  * @return string Склоененное число со словом
+  */
 function plural_form(int $number, array $after): string {
   $cases = array (2, 0, 1, 1, 1, 2);
   return $number.' '.$after[ ($number%100>4 && $number%100<20)? 2: $cases[min($number%10, 5)] ];
 }
-//Функция для пагинации
+/**
+  * Создает пагинацию
+  * @param int $cur_page Текущая страница
+  * @param int $elements_count Общее количество элементов для пагинации
+  * @param int $element_per_page Количество элементов на одну страницу
+  *
+  * @return array Массив с ключами (предыдущей страницы, следующей страницы, смещения пагинации, количество страниц, страницы для пагинации, текущей страницы, количества элементов на страницу)
+  */
 function createPagination(int $cur_page, int $elements_count, int $element_per_page): array {
   $pages_count = (int)ceil($elements_count/$element_per_page); //Считаем количество страниц
   $offset = ($cur_page - 1) * $element_per_page; //Смещение для запроса к БД
@@ -161,4 +224,16 @@ function createPagination(int $cur_page, int $elements_count, int $element_per_p
     $next_page = $cur_page;
   }
   return ['PREV_PAGE' => $prev_page, 'NEXT_PAGE' => $next_page, 'OFFSET' => $offset, 'PAGES_COUNT' => $pages_count, 'PAGES' => $pages, 'CURRENT_PAGE' => $cur_page, 'ELEMENT_PER_PAGE' => $element_per_page];
+}
+/**
+  * Проверяет аутентифицирован ли пользователь
+  * @param array $user Массив с данными о пользователе из сессии
+  *
+  * @return void - die и 403
+  */
+function isAuth(?array $user) {
+  if (!$user) {
+    header('HTTP/1.x 403');
+    die();
+  }
 }

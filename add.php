@@ -6,10 +6,7 @@ $link = require_once('db_conn.php');
 session_start();
 $USER = isset($_SESSION['USER'])?$_SESSION['USER']:NULL;
 //Ограничен доступ не анонимных пользователей
-if (!$USER) {
-	header('HTTP/1.x 403');
-	die();
-}
+isAuth($USER);
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
 $menu_items = get_DB_query_res($menu_items_query, $link, true);

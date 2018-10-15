@@ -34,7 +34,7 @@ $lot_query = 'SELECT
               LEFT JOIN bets
               ON bets.lot_id = lots.id
 							WHERE
-              lots.date_end > CURDATE() AND lots.id = '.$lot_id.'
+              lots.id = '.$lot_id.'
               GROUP BY bets.lot_id';
 $lot_item = get_DB_query_res($lot_query, $link, false);
 checkForExistanceDBres($lot_item);

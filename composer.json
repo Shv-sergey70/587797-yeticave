@@ -1,0 +1,9 @@
+{
+    "name": "shv/yeticave",
+    "description": "Website for php education",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
+}
