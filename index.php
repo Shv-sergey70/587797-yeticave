@@ -5,6 +5,7 @@ require_once('const.php');
 $link = require_once('db_conn.php');
 session_start();
 $USER = isset($_SESSION['USER'])?$_SESSION['USER']:NULL;
+require_once('getwinner.php');
 
 //Запрос на получение пунктов меню
 $menu_items_query = 'SELECT * FROM categories';
