@@ -25,21 +25,3 @@ $lots_winner_result = get_DB_query_res($lots_winner_query, $link, true);
 //   var_dump($lots_winner_result);
 // echo "</pre>";
 // die();
-
-
-$page_content = include_template('my_bets.php', 
-[
-  'menu_items' => $menu_items,
-  'my_bets' => $my_bets_result
-]);
-
-
-$layout_content = include_template('layout.php', 
-  [
-    'content' => $page_content, 
-    'menu_items' => $menu_items,
-    'search_query' => $_GET['search']??'', 
-    'title' => 'Yeticave', 
-    'USER'=> $USER
-  ]);
-print($layout_content);

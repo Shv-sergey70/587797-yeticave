@@ -47,6 +47,7 @@ $items_query = "SELECT
 			              lots.date_end as FINISH_DATE,
 			              lots.bet_step as PRICE_STEP,
 			              lots.author_id as AUTHOR_ID,
+			              IFNULL(MAX(bets.price), lots.start_price) as PRICE,
 			              categories.name as CATEGORY_NAME,
 			              COUNT(bets.lot_id) as BETS_COUNT
 										FROM lots

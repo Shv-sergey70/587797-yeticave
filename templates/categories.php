@@ -16,7 +16,7 @@
             <div class="lot__state">
               <div class="lot__rate">
                 <span class="lot__amount"><?=(!empty($value['BETS_COUNT']))?plural_form((int)$value['BETS_COUNT'], ['ставка', 'ставки', 'ставок']):'Стартовая цена'?></span>
-                <span class="lot__cost">10 999<b class="rub">р</b></span>
+                <span class="lot__cost"><?=toPriceFormat((int)$value['PRICE'])?></span>
               </div>
               <div class="lot__timer timer <?=$value['IS_LESS_THAN_24_HOUR']?'timer--finishing':''?>">
                 <?=getTimeDiff($value['FINISH_DATE'])?>
