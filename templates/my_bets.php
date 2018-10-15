@@ -23,7 +23,7 @@
             <img src="<?=htmlspecialchars($value['IMAGE_URL'], ENT_QUOTES)?>" width="54" height="40" alt="<?=htmlspecialchars($value['NAME'], ENT_QUOTES)?>">
           </div>
           <div>
-            <h3 class="rates__title"><a href="lot.php?ID=<?=$value['ID']?>"><?=htmlspecialchars($value['NAME'], ENT_QUOTES)?></a></h3>
+            <h3 class="rates__title"><a href="/lot.php?ID=<?=$value['ID']?>"><?=htmlspecialchars($value['NAME'], ENT_QUOTES)?></a></h3>
             <?php if($value['LOT_STATUS'] === 'IS_WIN'):?>
               <p><?=$value['CONTACTS']?></p>
             <?endif;?>

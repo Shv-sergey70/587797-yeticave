@@ -12,7 +12,7 @@
           </div>
           <div class="lot__info">
             <span class="lot__category"><?=htmlspecialchars($value['CATEGORY_NAME'], ENT_QUOTES)?></span>
-            <h3 class="lot__title"><a class="text-link" href="lot.php?ID=<?=$value['ID']?>"><?=htmlspecialchars($value['NAME'], ENT_QUOTES)?></a></h3>
+            <h3 class="lot__title"><a class="text-link" href="/lot.php?ID=<?=$value['ID']?>"><?=htmlspecialchars($value['NAME'], ENT_QUOTES)?></a></h3>
             <div class="lot__state">
               <div class="lot__rate">
                 <span class="lot__amount"><?=(!empty($value['BETS_COUNT']))?plural_form((int)$value['BETS_COUNT'], ['ставка', 'ставки', 'ставок']):'Стартовая цена'?></span>
@@ -29,7 +29,7 @@
   </section>
     <?php if(isset($pagination['PAGES_COUNT']) && $pagination['PAGES_COUNT'] > 1):?>
       <ul class="pagination-list">
-        <li class="pagination-item pagination-item-prev"><a href="<?='categories.php?cat_id='.$category_id.'&page='.$pagination['PREV_PAGE']?>">Назад</a></li>
+        <li class="pagination-item pagination-item-prev"><a href="<?='/categories.php?cat_id='.$category_id.'&page='.$pagination['PREV_PAGE']?>">Назад</a></li>
         <?php foreach($pagination['PAGES'] as $value):?>
           <?php if($value === $pagination['CURRENT_PAGE']):?>
             <li class="pagination-item pagination-item-active">
@@ -37,11 +37,11 @@
             </li>
           <?php else:?>
             <li class="pagination-item">
-              <a href="categories.php?cat_id=<?=$category_id?>&page=<?=$value?>"><?=$value?></a>
+              <a href="/categories.php?cat_id=<?=$category_id?>&page=<?=$value?>"><?=$value?></a>
             </li>
           <?php endif;?>
         <?php endforeach;?>
-        <li class="pagination-item pagination-item-next"><a href="<?='categories.php?cat_id='.$category_id.'&page='.$pagination['NEXT_PAGE']?>">Вперед</a></li>
+        <li class="pagination-item pagination-item-next"><a href="<?='/categories.php?cat_id='.$category_id.'&page='.$pagination['NEXT_PAGE']?>">Вперед</a></li>
       </ul>
     <?php endif;?>
 </div>

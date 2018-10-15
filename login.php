@@ -1,12 +1,11 @@
 <?php
 declare(strict_types=1);
 require_once('functions.php');
-require_once('const.php');
 $link = require_once('db_conn.php');
 session_start();
 $USER = isset($_SESSION['USER'])?$_SESSION['USER']:NULL;
 if ($USER) {
-	header('Location: '.MAIN_DIR);
+	header('Location: /');
 	die();
 }
 
@@ -51,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	  ]);
 	} else {
 		$_SESSION['USER'] = $user_from_db;
-		header('Location: '.MAIN_DIR);
+		header('Location: /');
 		die();
 	}
 } else {
