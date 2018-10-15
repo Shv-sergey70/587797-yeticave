@@ -17,7 +17,7 @@ $catalog_items_query = 'SELECT
                         lots.start_price AS lot_start_price, 
                         lots.image_url,
                         lots.date_create,
-                        lots.date_end, 
+                        lots.date_end as FINISH_DATE, 
                         lots.bet_step, 
                         categories.name AS category_name 
                         FROM lots 
@@ -26,6 +26,14 @@ $catalog_items_query = 'SELECT
                         WHERE lots.date_end > CURDATE()
                         ORDER BY lots.date_create DESC';
 $catalog_items = get_DB_query_res($catalog_items_query, $link, true);
+
+foreach ($catalog_items as $key => $value) {
+  if (strtotime($value['FINISH_DATE']) < strtotime('+1 day')) {
+      $catalog_items[$key]['IS_LESS_THAN_24_HOUR'] = true;
+  } else {
+      $catalog_items[$key]['IS_LESS_THAN_24_HOUR'] = false;
+  }
+}
 
 $page_content = include_template('index.php', 
   [
@@ -36,6 +44,7 @@ $layout_content = include_template('layout.php',
   [
     'content' => $page_content, 
     'menu_items' => $menu_items, 
+    'search_query' => $_GET['search']??'',
     'title' => 'Yeticave', 
     'USER'=> $USER
   ]);

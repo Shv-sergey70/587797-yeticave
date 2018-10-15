@@ -6,7 +6,7 @@
         <!--заполните этот список из массива категорий-->
         <?foreach($menu_items as $value):?>
             <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="pages/all-lots.html"><?=$value['name']?></a>
+                <a class="promo__link" href="categories.php?cat_id=<?=$value['id']?>"><?=$value['name']?></a>
             </li>
         <?endforeach;?>
     </ul>
@@ -30,8 +30,8 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?=toPriceFormat((int)$value['lot_start_price'])?></span>
                         </div>
-                        <div class="lot__timer timer">
-                          <?=getTimeToMidnight()?>
+                        <div class="lot__timer timer <?=$value['IS_LESS_THAN_24_HOUR']?'timer--finishing':''?>">
+                          <?=getTimeDiff($value['FINISH_DATE'])?>
                         </div>
                     </div>
                 </div>

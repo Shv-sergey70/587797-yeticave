@@ -44,3 +44,5 @@ CREATE INDEX adv_category_id ON lots(adv_category_id);
 
 CREATE INDEX user_id ON bets(user_id);
 CREATE INDEX lot_id ON bets(lot_id);
+
+CREATE FULLTEXT INDEX search_name_desc ON lots(name, description);
