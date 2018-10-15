@@ -5,22 +5,22 @@
   <div class="form__item <?=!empty($errors['EMAIL'])?'form__item--invalid':''?>">
     <label for="email">E-mail*</label>
     <input id="email" type="text" name="EMAIL" placeholder="Введите e-mail" value="<?=htmlspecialchars($account['EMAIL']??'')?>" required>
-    <span class="form__error"><?=$errors['EMAIL']?></span>
+    <span class="form__error"><?=$errors['EMAIL']??''?></span>
   </div>
   <div class="form__item <?=!empty($errors['PASSWORD'])?'form__item--invalid':''?>">
     <label for="password">Пароль*</label>
     <input id="password" type="password" name="PASSWORD" placeholder="Введите пароль" required>
-    <span class="form__error"><?=$errors['PASSWORD']?></span>
+    <span class="form__error"><?=$errors['PASSWORD']??''?></span>
   </div>
   <div class="form__item <?=!empty($errors['NAME'])?'form__item--invalid':''?>">
     <label for="name">Имя*</label>
     <input id="name" type="text" name="NAME" placeholder="Введите имя" value="<?=htmlspecialchars($account['NAME']??'')?>" required>
-    <span class="form__error"><?=$errors['NAME']?></span>
+    <span class="form__error"><?=$errors['NAME']??''?></span>
   </div>
   <div class="form__item <?=!empty($errors['MESSAGE'])?'form__item--invalid':''?>">
     <label for="message">Контактные данные*</label>
     <textarea id="message" name="MESSAGE" placeholder="Напишите как с вами связаться" required><?=htmlspecialchars($account['MESSAGE']??'')?></textarea>
-    <span class="form__error"><?=$errors['NAME']?></span>
+    <span class="form__error"><?=$errors['NAME']??''?></span>
   </div>
   <div class="form__item form__item--file form__item--last">
     <label>Аватар</label>
