@@ -25,19 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 	if (!empty($login['EMAIL']) && !filter_var($login['EMAIL'], FILTER_VALIDATE_EMAIL)) {
 		$errors['EMAIL'] = 'Введите валидный E-mail адрес';
-	} else if (!empty($login['EMAIL'])) {
+	} elseif (!empty($login['EMAIL'])) {
 		//Запрос на получение пользователя по введенному EMAIL
 		$safe_EMAIL = mysqli_real_escape_string($link, $login['EMAIL']);
 		$email_query = "SELECT * FROM users WHERE email = '$safe_EMAIL'";
 		$user_from_db = get_DB_query_res($email_query, $link, false);
-		if (!$user_from_db) {
+	}
+	if (!isset($user_from_db)) {
+		$errors['WRONG'] = 'Вы ввели неверный email/пароль';
+	} elseif (!empty($login['PASSWORD'])) {
+		//Запрос на сравнение паролей
+		if (!password_verify($login['PASSWORD'], $user_from_db['password'])) {
 			$errors['WRONG'] = 'Вы ввели неверный email/пароль';
-		} else if (!empty($login['PASSWORD'])) {
-			//Запрос на сравнение паролей
-			if (!password_verify($login['PASSWORD'], $user_from_db['password'])) {
-				$errors['WRONG'] = 'Вы ввели неверный email/пароль';
-			} 
-		}
+		} 
 	}
 
 	if (count($errors)) {

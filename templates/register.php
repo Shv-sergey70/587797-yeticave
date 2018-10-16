@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);?>
 <?=include_template('_main_menu.php', ['menu_items' => $menu_items]); //Подключение меню?>
-<form class="form container <?=!empty($errors)?'form--invalid':''?>" method="POST" enctype="multipart/form-data"> <!-- form--invalid -->
+<form class="form container <?=!empty($errors)?'form--invalid':''?>" method="POST" enctype="multipart/form-data">
   <h2>Регистрация нового аккаунта</h2>
   <div class="form__item <?=!empty($errors['EMAIL'])?'form__item--invalid':''?>">
     <label for="email">E-mail*</label>
@@ -38,14 +38,14 @@
     </div>
   </div>
   <span class="form__error form__error--bottom">
-    <?if (isset($errors) && count($errors) > 0):?>
+    <?php if (isset($errors) && count($errors) > 0):?>
       <p>Пожалуйста, исправьте ошибки в форме.</p>
       <ul>
-        <?foreach ($errors as $error_name => $error_text):?>
+        <?php foreach ($errors as $error_name => $error_text):?>
           <li><b><?=$dict[$error_name]?>:</b> <?=$error_text?></li>
-        <?endforeach;?>
+        <?php endforeach;?>
       </ul>
-    <?endif;?>
+    <?php endif;?>
   </span>
   <button type="submit" class="button">Зарегистрироваться</button>
   <a class="text-link" href="/login.php">Уже есть аккаунт</a>

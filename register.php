@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	//Проверка валидности и занятости EMAILа
 	if (!empty($account['EMAIL']) && !filter_var($account['EMAIL'], FILTER_VALIDATE_EMAIL)) {
 		$errors['EMAIL'] = 'Введите валидный E-mail адрес';
-	} else if (!empty($account['EMAIL'])) {
+	} elseif (!empty($account['EMAIL'])) {
 		$safe_EMAIL = mysqli_real_escape_string($link, $account['EMAIL']);
 		$email_query = 'SELECT email AS EMAIL FROM users WHERE email = "'.$safe_EMAIL.'"';
 		if (mysqli_num_rows(mysqli_query($link, $email_query))) {
@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	    'account' => $account
 	  ]);
 	} else {
-		//Проверяю $mime_extension_map[$file_type], тк если эта переменная не пуста, значит и файл существует
 		if (!empty($file_arr['URL'])) {
 			move_uploaded_file($file_arr['TMP_NAME'], 'img/'.$file_arr['NEW_NAME']);//Перемещаем картинку, загруженную юзером
 		}
