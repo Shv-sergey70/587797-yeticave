@@ -180,14 +180,15 @@ function dimension(int $time, string $type): string { // Определяем с
     'i' => ['минут', 'минуту', 'минуты'],
     'Y' => ['лет', 'год', 'года']
   ];
-    if ($time >= 5 && $time <= 20)
-        $n = 0;
-    else if ($time === 1 || $time % 10 === 1)
-        $n = 1;
-    else if (($time <= 4 && $time >= 1) || ($time % 10 <= 4 && $time % 10 >= 1))
-        $n = 2;
-    else
-        $n = 0;
+    if ($time >= 5 && $time <= 20) {
+      $n = 0;
+    } elseif ($time === 1 || $time % 10 === 1) {
+      $n = 1;
+    } elseif (($time <= 4 && $time >= 1) || ($time % 10 <= 4 && $time % 10 >= 1)) {
+      $n = 2;
+    } else {
+      $n = 0;
+    }
     return $time.' '.$dimension[$type][$n]. ' назад';
 }
 /**

@@ -26,7 +26,7 @@
             <h3 class="rates__title"><a href="/lot.php?ID=<?=$value['ID']?>"><?=htmlspecialchars($value['NAME'], ENT_QUOTES)?></a></h3>
             <?php if($value['LOT_STATUS'] === 'IS_WIN'):?>
               <p><?=$value['CONTACTS']?></p>
-            <?endif;?>
+            <?php endif;?>
           </div>
         </td>
         <td class="rates__category">
@@ -54,11 +54,11 @@
         <td class="rates__time">
           <?php if(abs(strtotime($value['BET_DATE_CREATE'])-time()) > 86400):?>
           <?=showDate(strtotime($value['BET_DATE_CREATE'])).' в '.date('H:i', strtotime($value['BET_DATE_CREATE']))?>
-          <?else:?>
+          <?php else:?>
           <?=showDate(strtotime($value['BET_DATE_CREATE']))?>
-          <?endif;?>
+          <?php endif;?>
         </td>
       </tr>
-    <?endforeach;?>
+    <?php endforeach;?>
   </table>
 </section>

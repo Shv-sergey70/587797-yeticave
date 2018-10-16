@@ -42,7 +42,6 @@
             </li>
           </ul>
         <?php endif; ?>
-
         </nav>
     </div>
 </header>
@@ -93,6 +92,5 @@
         </div>
     </div>
 </footer>
-
 </body>
 </html>

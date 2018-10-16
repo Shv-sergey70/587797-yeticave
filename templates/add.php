@@ -11,9 +11,9 @@
     <div class="form__item <?=!empty($errors['CATEGORY'])?'form__item--invalid':''?>">
       <label for="CATEGORY">Категория</label>
       <select id="CATEGORY" name="CATEGORY" required>
-        <?foreach ($menu_items as $value):?>
+        <?php foreach ($menu_items as $value):?>
           <option <?=(isset($lot['CATEGORY']) && $lot['CATEGORY'] === $value['name'])?'selected':''?> value="<?=$value['id']?>"><?=$value['name']?></option>
-        <?endforeach;?>
+        <?php endforeach;?>
       </select>
       <span class="form__error">Выберите категорию</span>
     </div>
@@ -56,14 +56,14 @@
     </div>
   </div>
   <span class="form__error form__error--bottom">
-    <?if (isset($errors) && count($errors) > 0):?>
+    <?php if (isset($errors) && count($errors) > 0):?>
       <p>Пожалуйста, исправьте ошибки в форме.</p>
       <ul>
-        <?foreach ($errors as $error_name => $error_text):?>
+        <?php foreach ($errors as $error_name => $error_text):?>
           <li><b><?=$dict[$error_name]?>:</b> <?=$error_text?></li>
-        <?endforeach;?>
+        <?php endforeach;?>
       </ul>
-    <?endif;?>
+    <?php endif;?>
   </span>
   <button type="submit" class="button">Добавить лот</button>
 </form>

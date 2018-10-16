@@ -46,7 +46,7 @@
               <td class="history__price"><?=toPriceFormat((int)$value['PRICE'])?></td>
               <td class="history__time"><?=showDate(strtotime($value['DATE_CREATE']))?></td>
             </tr>
-          <?endforeach;?>
+          <?php endforeach;?>
         </table>
       </div>
     </div>
