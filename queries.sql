@@ -13,7 +13,7 @@ INSERT INTO users (id, date_register, email, name, password, contacts) VALUES
 (3, '2018-09-24 00:00:00', 'petrovich@gmail.com', 'Petr', '1234567', 'vk - id12321');
 
 INSERT INTO lots (name, adv_category_id, start_price, date_end, image_url, date_create, bet_step, author_id) VALUES 
-('2014 Rossignol District Snowboard', 1, 10999, '2018-09-30 00:00:00', 'img/lot-1.jpg', '2018-09-23 00:00:00', 100, 2),
+('2014 Rossignol District Snowboard', 1, 10999, CURRENT_DATE() - INTERVAL 1 HOUR, 'img/lot-1.jpg', NOW() - INTERVAL 1 WEEK, 100, 2),
 ('DC Ply Mens 2016/2017 Snowboard', 1, 159999, '2018-10-10 00:00:00', 'img/lot-2.jpg', '2018-09-22 00:00:00', 200, 3), 
 ('Крепления Union Contact Pro 2015 года размер L/XL', 2, 8000, '2018-10-02 00:00:00', 'img/lot-3.jpg', '2018-09-21 00:00:00', 400, 1),
 ('Ботинки для сноуборда DC Mutiny Charocal', 3, 10999, '2018-10-02 00:00:00', 'img/lot-4.jpg', '2018-09-18 00:00:00', 500, 1), 
